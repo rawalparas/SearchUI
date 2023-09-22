@@ -6,6 +6,6 @@ const schema = require('../../middleware/joiSchema.js');
 
 const getController = require('./searchController.js');
 
-router.get('/search', validation.validate(schema.books) , getController.search);
+router.get('/search', validation.validate(schema.search) , getController.search);
 
 module.exports = router;

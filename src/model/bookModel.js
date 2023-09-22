@@ -21,7 +21,7 @@ const bookSchema = new mongoose.Schema({
         }
     },
     price: {
-        type: Sting,
+        type: String,
         required: true,
         validate: {
             validator: validatePrice,
