@@ -22,7 +22,7 @@ module.exports = {
         }),
         language : Joi.string().regex(regex.language).default("English").messages({
             'string.empty': message.REQUEST_BODY_NOT_BE_EMPTY,
-            'string.pattern.base': `"language : "${message.REGEX_PATTERN_UNMATCHED}`
+            'string.pattern.base': `"language :" ${message.REGEX_PATTERN_UNMATCHED}`
         })
     })
 }
