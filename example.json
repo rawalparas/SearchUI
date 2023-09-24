@@ -1,0 +1,157 @@
+[
+    {
+      "name": "The Universe Explained",
+      "authorName": "John Smith",
+      "price": "29",
+      "subject": "Science",
+      "language": "English"
+    },
+    {
+      "name": "Mathematics Made Easy",
+      "authorName": "Sarah Brown",
+      "price": "42",
+      "subject": "Science",
+      "language": "English"
+    },
+    {
+      "name": "History of Art",
+      "authorName": "Michael Clark",
+      "price": "55",
+      "subject": "Art",
+      "language": "English"
+    },
+    {
+      "name": "Exploring Space",
+      "authorName": "Laura Anderson",
+      "price": "38",
+      "subject": "Science",
+      "language": "English"
+    },
+    {
+      "name": "The Mystery of Time",
+      "authorName": "Daniel White",
+      "price": "30",
+      "subject": "Science",
+      "language": "English"
+    },
+    {
+      "name": "Literature Classics",
+      "authorName": "Emily Wilson",
+      "price": "50",
+      "subject": "Literature",
+      "language": "English"
+    },
+    {
+      "name": "Cooking for Beginners",
+      "authorName": "Mark Turner",
+      "price": "25",
+      "subject": "Cooking",
+      "language": "English"
+    },
+    {
+      "name": "Introduction to Philosophy",
+      "authorName": "Sophie Adams",
+      "price": "34",
+      "subject": "Philosophy",
+      "language": "Hindi"
+    },
+    {
+      "name": "Chemistry for Kids",
+      "authorName": "David Smith",
+      "price": "18",
+      "subject": "Science",
+      "language": "Hindi"
+    },
+    {
+      "name": "World History",
+      "authorName": "Olivia Brown",
+      "price": "45",
+      "subject": "History",
+      "language": "English"
+    },
+    {
+      "name": "The Art of Photography",
+      "authorName": "Peter Davis",
+      "price": "40",
+      "subject": "Art",
+      "language": "Hindi"
+    },
+    {
+      "name": "Space Exploration",
+      "authorName": "Robert Wilson",
+      "price": "37",
+      "subject": "Science",
+      "language": "English"
+    },
+    {
+      "name": "Poetry Anthology",
+      "authorName": "Emma Roberts",
+      "price": "28",
+      "subject": "Literature",
+      "language": "English"
+    },
+    {
+      "name": "Healthy Cooking",
+      "authorName": "Sophia Turner",
+      "price": "29",
+      "subject": "Cooking",
+      "language": "English"
+    },
+    {
+      "name": "Ethics in Philosophy",
+      "authorName": "James Parker",
+      "price": "32",
+      "subject": "Philosophy",
+      "language": "English"
+    },
+    {
+      "name": "Biology Basics",
+      "authorName": "Lisa Johnson",
+      "price": "27",
+      "subject": "Science",
+      "language": "English"
+    },
+    {
+      "name": "Ancient History",
+      "authorName": "Michael Adams",
+      "price": "48",
+      "subject": "History",
+      "language": "Sanskrit"
+    },
+    {
+      "name": "Modern Art Trends",
+      "authorName": "Karen White",
+      "price": "60",
+      "subject": "Art",
+      "language": "English"
+    },
+    {
+      "name": "Physics Explained",
+      "authorName": "Steven Davis",
+      "price": "35",
+      "subject": "Science",
+      "language": "English"
+    },
+      {
+        "name": "Physics Explained",
+        "authorName": "Steven Davis",
+        "price": "35",
+        "subject": "Science",
+        "language": "Sanskrit"
+      },
+    {
+      "name": "Shakespearean Sonnets",
+      "authorName": "Julia Turner",
+      "price": "22",
+      "subject": "Literature",
+      "language": "English"
+    },
+    {
+        "name": "Shakespearean Sonnets",
+        "authorName": "Julia Turner",
+        "price": "22",
+        "subject": "Literature",
+        "language": "Hindi"
+      }
+  ]
+  

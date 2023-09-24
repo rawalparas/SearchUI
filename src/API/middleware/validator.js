@@ -7,6 +7,7 @@ module.exports = {
 
         if (req.method === 'POST' & Object.keys(req.body).length === 0 || req.method === 'GET' & Object.keys(req.query).length === 0)
             return res.status(400).send(message.BAD_REQUEST)
+        
         try {
             if (validationResult.error) {
                 return res.status(422).json({ error : validationResult.error.details[0].message });
