@@ -30,7 +30,7 @@ module.exports = {
         pageNumber: Joi.number().min(1).required().messages(),
         limit: Joi.number().min(1).messages(),
         name : Joi.boolean().default(false).messages(),
-        author : Joi.boolean().default(false).messages(),
+        authorName : Joi.boolean().default(false).messages(),
         language :  Joi.boolean().default(false).messages(),
         subject : Joi.boolean().default(false).messages()
     })

@@ -8,5 +8,6 @@ const searchController = require('./searchController.js');  // correct this part
 
 router.get('/search', validation.validate(schema.search) , searchController.search);
 router.get('/search/v2', validation.validate(schema.search) , searchController.searchv2);
+router.get('/search/v3', validation.validate(schema.search) , searchController.searchv3);
 
 module.exports = router;
