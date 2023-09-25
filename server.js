@@ -11,10 +11,10 @@ const allRoutes = require('./src/API/controller');
 
 app.use('/api', allRoutes);
 
-app.use((req, res) => {                 // Response you get on the Browser.
+app.use((req, res) => {                 
     res.status(404).send("Page not found");
 });
 
-app.listen(PORT, (err) => {             //Create a listener on the specified port
+app.listen(PORT, (err) => {             
     console.log("Server running on " + PORT);
 });

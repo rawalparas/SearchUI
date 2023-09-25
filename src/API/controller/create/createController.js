@@ -4,7 +4,7 @@ const messages = require('../../../helper/messages.js');
 module.exports = {
     create: async (req, res) => {
         try {
-            const createBook = await books.insertMany(req.body);
+            const createBook = await books.create(req.body);
 
             console.log("Inserted data: ", createBook);
             return res.status(200).send(messages.SUCCESSSFULLY_CREATED);

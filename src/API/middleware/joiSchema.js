@@ -27,17 +27,11 @@ module.exports = {
     }),
     search: Joi.object({
         search : Joi.string().min(1).max(25).messages(),
-        name: Joi.string().regex(regex.bookName).min(1).max(20).messages(),
-        // author: Joi.string().regex(regex.authorName).min(2).max(25).messages(),
-        price: Joi.string().regex(regex.price).messages(),
-        language: Joi.string().regex(regex.language).default("English").messages(),
-        subject: Joi.string().regex(regex.subject).min(1).max(15).messages(),
         pageNumber: Joi.number().min(1).required().messages(),
         limit: Joi.number().min(1).messages(),
-        isSearch : Joi.boolean().default(false).messages(),
-        isName : Joi.boolean().default(false).messages(),
+        name : Joi.boolean().default(false).messages(),
         author : Joi.boolean().default(false).messages(),
-        isLanguage :  Joi.boolean().default(false).messages(),
-        isSubject : Joi.boolean().default(false).messages()
+        language :  Joi.boolean().default(false).messages(),
+        subject : Joi.boolean().default(false).messages()
     })
 }
