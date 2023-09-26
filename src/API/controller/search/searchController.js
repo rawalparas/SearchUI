@@ -11,7 +11,7 @@ module.exports = {
             const language = req.query.language;
             const subject = req.query.subject;
             const pageNumber = req.query.pageNumber;
-            const limit = req.query.limit || 5;
+            const limit = req.query.limit || 10;
             const offset = (pageNumber - 1) * limit;
 
             let query = {};
@@ -90,8 +90,6 @@ module.exports = {
 
             var key = getKeyByValue(queryField, 'true');
 
-            console.log
-
             let query = {}
             let getBooks = {};
 
@@ -108,27 +106,61 @@ module.exports = {
 
             getBooks = await book.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
             return res.status(200).send(getBooks);
-            
+
         } catch (err) {
             console.error(err);
             return res.status(500).json({ error: message.INTERNAL_SERVER_ERROR });
         }
     },
     searchv4: async (req, res) => {
+        try {
+            const filters = req.query.filters;
+            const search = req.query.search;
+            const pageNumber = req.query.pageNumber;
+            const limit = req.query.limit || 10;
+            const offset = (pageNumber - 1) * limit;
+
+            let getBooks = [];
+
+            for (const key in filters) {
+                const filterValue = filters[key];
+                const result = await queryResult(filterValue, search, limit, offset);
+                getBooks.push(result);
+            }
+            return res.status(200).send(getBooks);
+        }
+        catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: message.INTERNAL_SERVER_ERROR });
+        }
+    },
+    searchv5 : async(req , res) =>  {
+        try{
+            const filters = req.query.filters;
+            const search = req.query.search;
+            const pageNumber = req.query.pageNumber;
+            const limit = req.query.limit || 10;
+            const offset = (pageNumber -1) * limit;
+
+
+        }
+        catch(err){
+
+        }
 
     }
 };
+
+function queryResult(key, search, limit, offset) {
+    return book.find({ key: search }).skip(offset).limit(limit);
+}
 
 function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
 
-
-// loop for traversing on the request query
-
-// for (var key in req.query){
-// if(req.query.hasOwnProperty(key)){
-// query[key] = new RegExp(search , 'i')
-// }
-// }
-// 
+async function queryResult(filterValue, search, limit, offset) {
+    let query = {};
+    query[filterValue] = new RegExp(search, "i");
+    return await book.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
+}

@@ -32,6 +32,7 @@ module.exports = {
         name : Joi.boolean().default(false).messages(),
         authorName : Joi.boolean().default(false).messages(),
         language :  Joi.boolean().default(false).messages(),
-        subject : Joi.boolean().default(false).messages()
+        subject : Joi.boolean().default(false).messages(),
+        filters : Joi.array().messages()
     })
 }
