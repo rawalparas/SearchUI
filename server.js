@@ -1,4 +1,5 @@
 require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const app = express();
 
@@ -8,6 +9,7 @@ require('./databaseConn.js');
 
 app.use(express.json());
 const allRoutes = require('./src/API/controller');
+app.use(cors());
 
 app.use('/api', allRoutes);
 

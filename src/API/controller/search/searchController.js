@@ -142,6 +142,19 @@ module.exports = {
             const limit = req.query.limit || 10;
             const offset = (pageNumber -1) * limit;
 
+            // const field = filters.length()
+            // console.log(filters.length)
+            // console.log(field);
+
+            let query = {};
+            if (filters.includes('all')){
+                query.$or = [
+                    { name: { $regex: new RegExp(search, "i") } },
+                    { authorName: { $regex: new RegExp(search, "i") } },
+                    { subject: { $regex: new RegExp(search, "i") } },
+                    { language: { $regex: new RegExp(search, "i") } },
+                ];
+            }
 
         }
         catch(err){
