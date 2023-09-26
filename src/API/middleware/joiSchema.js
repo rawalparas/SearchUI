@@ -33,6 +33,11 @@ module.exports = {
         authorName : Joi.boolean().default(false).messages(),
         language :  Joi.boolean().default(false).messages(),
         subject : Joi.boolean().default(false).messages(),
-        filters : Joi.array().messages()
+    }) , 
+    searchv5 : Joi.object({
+        search : Joi.string(),
+        pageNumber : Joi.number().min(1),
+        limit : Joi.number().optional(),
+        filters : Joi.array().optional()
     })
 }
