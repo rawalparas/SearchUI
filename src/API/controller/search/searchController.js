@@ -90,25 +90,19 @@ module.exports = {
             const offset = (pageNumber - 1) * limit;
 
             const searchObject = { $regex: new RegExp(search, "i") };
+            let query = {};
 
             if (!filters) {
-                let query = {};
                 query.$or = [
                     { name: searchObject },
                     { authorName: searchObject },
                     { subject: searchObject },
                     { language: searchObject },
                 ];
-                const getBooks = await book.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
-                return res.status(200).send(getBooks);
+            }else{
+                const arrayFilter = Object.keys(filters).map((key) => ({ [filters[key]]: searchObject }));
+                query = { $or: arrayFilter };
             }
-
-            const filterKeys = Object.keys(filters);
-            const arrayFilter = filterKeys.map((key) => ({ [filters[key]]: searchObject }));
-
-            console.log(arrayFilter);
-
-            const query = { $or: arrayFilter };
             const getBooks = await book.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
             return res.status(200).send(getBooks);
         }
@@ -116,84 +110,6 @@ module.exports = {
             console.error(err);
             return res.status(500).send({ error: 'Internal server error' });
         }
-    },
-    searchv2: async (req, res) => {
-        try {
-            // all the params are come in the request.
-            const search = req.query.search;
-            const pageNumber = req.query.pageNumber;
-            const limit = req.query.limit || 5;
-            const offset = (pageNumber - 1) * limit;
-
-            let query = {};
-
-            let getBooks = {};
-
-            for (var key in req.query) {
-                if (req.query[key] == 'true') {
-                    query[key] = new RegExp(search, "i");
-                    getBooks = await book.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
-                }
-                else {
-                    query.$or = [
-                        { name: { $regex: new RegExp(search, "i") } },
-                        { authorName: { $regex: new RegExp(search, "i") } },
-                        { subject: { $regex: new RegExp(search, "i") } },
-                        { language: { $regex: new RegExp(search, "i") } },
-                    ];
-                    getBooks = await book.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
-                }
-            }
-
-            return res.status(200).send(getBooks);
-        } catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: message.INTERNAL_SERVER_ERROR });
-        }
-    },
-    searchv4: async (req, res) => {
-        try {
-            const filters = req.query.filters;
-            const search = req.query.search;
-            const pageNumber = req.query.pageNumber;
-            const limit = req.query.limit || 10;
-            const offset = (pageNumber - 1) * limit;
-
-            let getBooks = [];
-
-            for (const key in filters) {
-                const filterValue = filters[key];
-                const result = await queryResult(filterValue, search, limit, offset);
-                getBooks.push(result);
-            }
-            return res.status(200).send(getBooks);
-        }
-        catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: message.INTERNAL_SERVER_ERROR });
-        }
     }
 };
-
-function queryResult(key, search, limit, offset) {
-    return book.find({ key: search }).skip(offset).limit(limit);
-}
-
-// function getKeyByValue(object, value) {
-//     return Object.keys(object).find(key => object[key] === value);
-// }
-
-async function queryResult(filterValue, search, limit, offset) {
-    let query = {};
-    query[filterValue] = new RegExp(search, "i");
-    return await book.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
-}
-
-/*
-const query = {
-  $or: filters.map((field, index) => ({
-    [field]: searchObjects[index]
-  }))
-};
-
-*/
+    
