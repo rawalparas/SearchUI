@@ -25,16 +25,7 @@ module.exports = {
             'string.pattern.base': `"language :" ${message.REGEX_PATTERN_UNMATCHED}`
         })
     }),
-    search: Joi.object({
-        search : Joi.string().min(1).max(25).messages(),
-        pageNumber: Joi.number().min(1).required().messages(),
-        limit: Joi.number().min(1).messages(),
-        name : Joi.boolean().default(false).messages(),
-        authorName : Joi.boolean().default(false).messages(),
-        language :  Joi.boolean().default(false).messages(),
-        subject : Joi.boolean().default(false).messages(),
-    }) , 
-    searchv5 : Joi.object({
+    search : Joi.object({
         search : Joi.string().required(),
         pageNumber : Joi.number().min(1).required(),
         limit : Joi.number().optional(),
