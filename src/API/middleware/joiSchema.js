@@ -35,8 +35,8 @@ module.exports = {
         subject : Joi.boolean().default(false).messages(),
     }) , 
     searchv5 : Joi.object({
-        search : Joi.string(),
-        pageNumber : Joi.number().min(1),
+        search : Joi.string().required(),
+        pageNumber : Joi.number().min(1).required(),
         limit : Joi.number().optional(),
         filters : Joi.array().optional()
     })
