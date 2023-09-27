@@ -48,7 +48,7 @@ module.exports = {
         try {
             const search = req.query.search;
             const searchObject = { $regex: new RegExp(search, "i") };
-            console.log(searchObject)
+            console.log(searchObject);
 
             const suggestionsData = await book.find({
                 $or: [
@@ -59,27 +59,21 @@ module.exports = {
                 ]
             }, { _id: 0, __v: 0 }).limit(10);
 
-            const matchedValues = suggestionsData.reduce((acc, book) => {
-                if (book.name.match(searchObject)) {
-                  acc.push(book.name);
-                  console.log(acc)
-                }
-                if (book.authorName.match(searchObject)) {
-                  acc.push(book.authorName);
-                  console.log(acc)
-                }
-                if(book.subject.match(searchObject)){
-                    acc.push(book.subject)
-                    console.log(acc)
-                }
-                if(book.language.match(searchObject)){
-                    acc.push(book.language)
-                    console.log(acc)
-                }
-                return acc;
-              }, []);
+            console.log(suggestionsData);
 
-              const filteredValues = matchedValues.filter((value) => value.toLowerCase().includes('in'));
+            const suggestedObject = new RegExp("^" + search, "i");
+            console.log(suggestedObject);
+
+            const matchedValues = suggestionsData
+                .filter(book =>
+                    book.name.match(suggestedObject) ||
+                    book.authorName.match(suggestedObject) ||
+                    book.subject.match(suggestedObject) ||
+                    book.language.match(suggestedObject)
+                ).map(book => [book.name, book.authorName, book.subject, book.language]).flat();
+
+
+            const filteredValues = matchedValues.filter((value) => value.toLowerCase().match(suggestedObject));
 
             return res.status(200).send(filteredValues);
         } catch (err) {
@@ -122,7 +116,6 @@ module.exports = {
             console.error(err);
             return res.status(500).send({ error: 'Internal server error' });
         }
-
     },
     searchv2: async (req, res) => {
         try {
