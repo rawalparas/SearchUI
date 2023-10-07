@@ -75,8 +75,8 @@ module.exports = {
   },
   searchBook : async(req , res) => {
     try {
-      const result = await bookOne.find();
-      return res.status(200).json({ BookOne : result}).populate(language,author);
+      const result = await bookOne.find().populate("authorId", "name").populate("languageId", "name");;
+      return res.status(200).json({"books" : result})
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message : message.INTERNAL_SERVER_ERROR});

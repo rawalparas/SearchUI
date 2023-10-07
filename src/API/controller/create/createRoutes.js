@@ -11,5 +11,7 @@ router.post('/createAuthor', createController.createAuthor);
 router.post('/createLanguage', createController.createLanguage);
 router.post('/createBook', createController.createBook);
 
+router.post('/insertBooks', createController.insertBooks);
+
 module.exports = router;
 

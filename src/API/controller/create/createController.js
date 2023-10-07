@@ -2,7 +2,8 @@ const books = require("../../../model/bookModel.js");
 const author = require("../../../model/authorModel.js");
 const messages = require("../../../helper/messages.js");
 const bookOne = require("../../../model/bookOneModel.js");
-const language = require("../../../model/languageModel.js");
+const Language = require("../../../model/languageModel.js");
+const mongoose = require('mongoose');
 
 module.exports = {
   create: async (req, res) => {
@@ -68,4 +69,23 @@ module.exports = {
       res.status(500).json({ message: "Server error" });
     }
   },
+  insertBooks : async(req , res) => {
+    try{
+      const {name , author , language} = req.body;
+
+      console.log(language);
+
+      let languageId = await Language.find({"name" : language}, {_id : 1});
+      console.log(languageId)
+
+      if (!languageId){
+        const languageId = await Language.create(language);
+        return languageId;
+      }
+      return res.send(languageId);
+    }catch(err){
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
 };

@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const message = require('../helper/messages.js');
 const regex = require('../helper/regexPatterns.js');
-const author = require('../model/authorModel.js');
-const language = require('../model/languageModel.js')
 
 const bookSchema = new mongoose.Schema({
     name: {
