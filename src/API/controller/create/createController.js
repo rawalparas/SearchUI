@@ -3,7 +3,6 @@ const author = require("../../../model/authorModel.js");
 const messages = require("../../../helper/messages.js");
 const bookOne = require("../../../model/bookOneModel.js");
 const Language = require("../../../model/languageModel.js");
-const mongoose = require('mongoose');
 
 module.exports = {
   create: async (req, res) => {
@@ -71,18 +70,18 @@ module.exports = {
   },
   insertBooks : async(req , res) => {
     try{
-      const {name , author , language} = req.body;
+      // const {name , author , language} = req.body;
 
-      console.log(language);
+      // console.log(language);
 
-      let languageId = await Language.find({"name" : language}, {_id : 1});
-      console.log(languageId)
+      let languageData = await Language.find({"name" : req.body.language});
+      console.log(languageData)
 
-      if (!languageId){
-        const languageId = await Language.create(language);
-        return languageId;
+      if (!languageData._id){
+        let languageData = await Language.create(req.body.language);
+        return languageData;
       }
-      return res.send(languageId);
+      return res.send(languageData);
     }catch(err){
       console.error(err);
       res.status(500).json({ message: "Server error" });
