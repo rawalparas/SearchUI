@@ -6,7 +6,6 @@ const bookSchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,
-      unique: true,
       validate: {
         validator: validateName,
         message: validateMessageName,
@@ -18,11 +17,11 @@ const bookSchema = new mongoose.Schema({
     },
     languageId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'language', // Reference to the Language model
+      ref: 'languages', // Reference to the Language model
     },
   });
   
-const model = mongoose.model("BookOne", bookSchema);
+const model = mongoose.model("Book", bookSchema);
 module.exports = model;
 
 

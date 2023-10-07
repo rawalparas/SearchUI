@@ -1,7 +1,7 @@
 const books = require("../../../model/bookModel.js");
 const author = require("../../../model/authorModel.js");
 const messages = require("../../../helper/messages.js");
-const bookOne = require("../../../model/bookOneModel.js");
+const book = require("../../../model/bookOneModel.js");
 const Language = require("../../../model/languageModel.js");
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
   createLanguage: async (req, res) => {
     try {
       console.log(req.body);
-      const createLanguage = await language.create(req.body);
+      const createLanguage = await Language.create(req.body);
 
       console.log("Inserted data: ", createLanguage);
       return res
@@ -50,14 +50,14 @@ module.exports = {
     try {
       const { name, authorId, languageId } = req.body;
 
-      const newBook = new bookOne({
+      const newBook = new book({
         name,
         authorId,
         languageId,
       });
       await newBook.save();
 
-      const populatedBook = await bookOne
+      const populatedBook = await book
         .findById(newBook._id)
         .populate("authorId", "name") 
         .populate("languageId", "name");
@@ -70,18 +70,30 @@ module.exports = {
   },
   insertBooks : async(req , res) => {
     try{
-      // const {name , author , language} = req.body;
+        
+      // finding the language name in the language collection.
+      let languageId = await Language.findOne({"name" : req.body.language});
 
-      // console.log(language);
-
-      let languageData = await Language.find({"name" : req.body.language});
-      console.log(languageData)
-
-      if (!languageData._id){
-        let languageData = await Language.create(req.body.language);
-        return languageData;
+      if(!languageId){
+        // inserting the language in the language collection.
+        languageId = await Language.create({"name" : req.body.language});
       }
-      return res.send(languageData);
+
+      // finding the authorName in the author collection.
+      let authorId = await author.findOne({"name" : req.body.authorName});
+
+      if(!authorId){
+        authorId = await author.create({"name" : req.body.authorName});
+      }
+
+      let bookData
+
+      if(languageId._id && authorId._id){
+        bookData = await book.create({"name" : req.body.name , "authorId" : authorId._id , "languageId" : languageId._id});
+      }
+
+      bookData = await book.findById(bookData._id).populate("authorId" , "name").populate("languageId" , "name");
+      return res.status(200).json({"Book Created Successfully" : bookData});
     }catch(err){
       console.error(err);
       res.status(500).json({ message: "Server error" });

@@ -3,7 +3,7 @@ const message = require('../helper/messages.js');
 const regex = require('../helper/regexPatterns.js');
 
 const authorSchema = new mongoose.Schema({
-    name: {
+    name : {
         type: String,
         required: true,
         unique: true,
