@@ -6,22 +6,9 @@ const Language = require("../../../model/languageModel.js");
 module.exports = {
   insertBooks : async(req , res) => {
     try{
-      // finding the language name in the language collection.
-      let languageId = await Language.findOne({"name" : req.body.language});
+      let languageId = await findLanguage(req);
 
-      if(!languageId){
-        // inserting the language in the language collection.
-        languageId = await Language.create({"name" : req.body.language});
-      }
-
-      // finding the authorName in the author collection.
-      let authorId = await author.findOne({"name" : req.body.author});
-
-      if(!authorId){
-        authorId = await author.create({"name" : req.body.author});
-      }
-
-      let bookData
+      let authorId = await findAuthor(req);
 
       if(languageId._id && authorId._id){
         bookData = await book.create({"name" : req.body.name , "authorId" : authorId._id , "languageId" : languageId._id});
@@ -33,3 +20,19 @@ module.exports = {
     }
   }
 };
+
+async function findLanguage(req){
+  let languageId = await Language.findOne({"name" : req.body.language});
+  if(!languageId || languageId.length == 0){
+    languageId = await Language.create({"name" : req.body.language});
+  }
+  return languageId;
+}
+
+async function findAuthor(req){
+  let authorId = await author.findOne({"name" : req.body.author});
+  if(!authorId || authorId.length == 0){
+    authorId = await author.create({"name" : req.body.author});
+  }
+  return authorId;
+}
