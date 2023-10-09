@@ -16,7 +16,7 @@ module.exports = model;
 
 
 function validateLanguage(value) {
-    return regex.languageModel.test(value);
+    return regex.language.test(value);
 }
 
 function validateMessageLanguage(props) {
@@ -24,7 +24,7 @@ function validateMessageLanguage(props) {
         return `${props.value} : ${message.NOT_CONTAIN_SPACES_AT_START_AND_END}`
     if (props.value.length < 1 || props.value.length > 25)
         return `${props.value} : ${message.INVALID_LENGTH}`
-    if (!regex.languageModel.test(props.value))
+    if (!regex.language.test(props.value))
         return `${props.value} : ${message.MUST_NOT_CONTAIN_SPEC_CHAR_AND_NUM}`
     return message.INVALID_FORMAT;
 }

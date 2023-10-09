@@ -19,7 +19,7 @@ module.exports = model;
 
 
 function validateName(value) {
-    return regex.authorName.test(value);
+    return regex.author.test(value);
 }
 
 function validateMessageName(props) {
@@ -27,7 +27,7 @@ function validateMessageName(props) {
         return `${props.value} : ${message.NOT_CONTAIN_SPACES_AT_START_AND_END}`
     if (props.value.length < 2 || props.value.length > 30)
         return `${props.value} : ${message.INVALID_LENGTH}`
-    if (!regex.authorName.test(props.value))
+    if (!regex.author.test(props.value))
         return `${props.value} : ${message.MUST_NOT_CONTAIN_SPEC_CHAR_AND_NUM}`
     return message.INVALID_FORMAT;
 }
