@@ -41,7 +41,6 @@ module.exports = {
           s_id : authorId._id
         })
       }
-      console.log(languageId.name)
       let searchLanguage = await search.findOne({name : req.body.language});
       if(!searchLanguage){
         searchName = await search.create({
