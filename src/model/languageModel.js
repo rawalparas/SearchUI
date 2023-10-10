@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const message = require('../helper/messages.js');
 const regex = require('../helper/regexPatterns.js');
-const modelValidation = require('../model/booksModel.js')
+const validateSchemaName = require('../helper/validateModelMethod.js')
 
 const languageSchema = new mongoose.Schema({
     name: {
         type: String,
         validate: {
-            validator: modelValidation.validateLanguage(regex.language , value),
-            message: modelValidation.validateMessageLanguage(regex.language , props),
+            validator: validateSchemaName.validateName(regex.language),
+            message: validateSchemaName.validateMessageName(regex.language),
         },
     },
 });

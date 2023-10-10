@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const messages = require('../helper/messages.js');
 const regex = require('../helper/regexPatterns.js');
-const modelvalidation = require('../model/booksModel.js');
+const validateSchemaName = require('../helper/validateModelMethod.js')
 
 const authorSchema = new mongoose.Schema({
     name : {
@@ -9,8 +9,8 @@ const authorSchema = new mongoose.Schema({
         required: true,
         unique: true,
         validate: {
-            validator : modelvalidation.validateName(regex.author , value),
-            messages : modelvalidation.validateMessageName(regex.author , props)
+            validator : validateSchemaName.validateName(regex.author),
+            messages : validateSchemaName.validateMessageName(regex.author)
         }
     }
 });
