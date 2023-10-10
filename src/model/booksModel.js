@@ -6,14 +6,14 @@ const bookSchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,
-      // validate : {
-      //   validator : function(value){
-      //     return validateSchemaName.validateName(value,regex.name);
-      //   },
-      //   message : function(props){
-      //     return validateSchemaName.validateMessageName(props.value , regex.name)
-      //   }
-      // }
+      validate : {
+        validator : function(value){
+          return validateSchemaName.validateName(value,regex.name);
+        },
+        message : function(props){
+          return validateSchemaName.validateMessageName(props, regex.name)
+        }
+      }
     },
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
