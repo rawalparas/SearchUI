@@ -2,8 +2,6 @@ const message = require('../helper/messages.js');
 
 module.exports = {
     validateName(value, regex) {
-        console.log(regex)
-
         return regex.test(value);
     },
     validateMessageName(props, regex) {

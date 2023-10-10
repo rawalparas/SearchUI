@@ -7,8 +7,12 @@ const languageSchema = new mongoose.Schema({
     name: {
         type: String,
         validate: {
-            validator: validateSchemaName.validateName(regex.language),
-            message: validateSchemaName.validateMessageName(regex.language),
+            validator: function(value){
+                return validateSchemaName.validateName(value , regex.language)
+            },
+            message : function(props){
+                return validateSchemaName.validateMessageName(props , regex.language)
+            }
         },
     },
 });

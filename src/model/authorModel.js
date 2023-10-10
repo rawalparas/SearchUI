@@ -9,8 +9,12 @@ const authorSchema = new mongoose.Schema({
         required: true,
         unique: true,
         validate: {
-            validator : validateSchemaName.validateName(regex.author),
-            messages : validateSchemaName.validateMessageName(regex.author)
+            validator : function(value){
+                return validateSchemaName.validateName( value , regex.author)
+            },
+            message : function(props){
+                return validateSchemaName.validateMessageName( props , regex.author)
+            }
         }
     }
 });
