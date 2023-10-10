@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 const regex = require('../helper/regexPatterns.js');
-const validateSchemaName = require('../helper/validateModelMethod.js');
+// const validateSchemaName = require('../helper/validateModelMethod.js');
 
 const bookSchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,
-      validate : {
-        validator : function(value){
-          return validateSchemaName.validateName(value,regex.name);
-        },
-        message : function(props){
-          return validateSchemaName.validateMessageName(props.value , regex.name)
-        }
-      }
+      // validate : {
+      //   validator : function(value){
+      //     return validateSchemaName.validateName(value,regex.name);
+      //   },
+      //   message : function(props){
+      //     return validateSchemaName.validateMessageName(props.value , regex.name)
+      //   }
+      // }
     },
     authorId: {
       type: mongoose.Schema.Types.ObjectId,

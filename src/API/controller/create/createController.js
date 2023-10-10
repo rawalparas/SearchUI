@@ -16,19 +16,38 @@ module.exports = {
       if (!authorId || authorId.length == 0) {
         authorId = await author.create({ name: req.body.author });
       }
+
       if (languageId._id && authorId._id) {
         bookData = await book.create({
           name: req.body.name,
           authorId: authorId._id,
           languageId: languageId._id,
         });
-      } else if (languageId._id || authorId.id) {
-        const searchData = await search.create({
-          name: req.body.name,
-          s_id: req.body.languageId
-        })
       } else {
         return res.status(400).send(messages.BAD_REQUEST)
+      }
+
+      let searchName = await search.findOne({name : req.body.name});
+      if(!searchName){
+        searchName = await search.create({
+          name : bookData.name,
+          s_id : bookData._id
+        })
+      }
+      let searchAuthor = await search.findOne({name : req.body.author});
+      if(!searchAuthor){
+        searchName = await search.create({
+          name : authorId.name,
+          s_id : authorId._id
+        })
+      }
+      console.log(languageId.name)
+      let searchLanguage = await search.findOne({name : req.body.language});
+      if(!searchLanguage){
+        searchName = await search.create({
+          name : languageId.name,
+          s_id : languageId._id
+        })
       }
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {

@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const message = require('../helper/messages.js');
 const regex = require('../helper/regexPatterns.js');
-const validateSchemaName = require('../helper/validateModelMethod.js')
+// const validateSchemaName = require('../helper/validateModelMethod.js')
 
 const languageSchema = new mongoose.Schema({
     name: {
         type: String,
-        validate: {
-            validator: validateSchemaName.validateName(regex.language),
-            message: validateSchemaName.validateMessageName(regex.language),
-        },
+        // validate: {
+        //     validator: validateSchemaName.validateName(regex.language),
+        //     message: validateSchemaName.validateMessageName(regex.language),
+        // },
     },
 });
 const model = mongoose.model("languages", languageSchema);
