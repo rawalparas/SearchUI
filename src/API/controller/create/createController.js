@@ -7,6 +7,7 @@ const { error } = require("winston");
 module.exports = {
   insertBooks: async (req, res) => {
     try {
+      try{
       const { name : bookName , author : authorName , language : languageName} = req.body;
 
       let languageId = await language.findOne({ name : languageName });
@@ -29,9 +30,13 @@ module.exports = {
         return res.send(400).send(messages.BAD_REQUEST);
       }
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
-    } catch (err) {
+    }
+    catch(err){
       console.error(err);
       res.status(400).json({error : err.message});
+    }
+    } catch (err) {
+      return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
 };
