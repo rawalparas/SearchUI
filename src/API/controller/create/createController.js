@@ -7,14 +7,14 @@ const search = require('../../../model/searchModel.js');
 module.exports = {
   insertBooks: async (req, res) => {
     try {
-      const { name: bookName, author: authorName, language: languageName } = req.body;
+      const { name: bookName, author : authorName, language: languageName } = req.body;
 
       let languageId = await language.findOne({ name: languageName });
       if (!languageId || languageId.length == 0) {
         languageId = await language.create({ name: languageName });
       }
 
-      let authorId = await author.findOne({ name: authorName });
+      let authorId = await author.findOne({ name : authorName });
       if (!authorId || authorId.length == 0) {
         authorId = await author.create({ name: authorName });
       }
