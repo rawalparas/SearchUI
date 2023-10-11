@@ -1,13 +1,15 @@
-const bookName = /^(?=.{1,50}$)[a-zA-Z+%.]+(?:\s[a-zA-Z]+)*$/;   // 1 , 50
-const authorName = /^(?=.{2,30}$)[a-zA-Z]+(?:\s[a-zA-Z]+)*$/;    // 2 , 30
+const name = /^(?=.{1,50}$)[a-zA-Z+%.]+(?:\s[a-zA-Z]+)*$/;  
+const author = /^(?=.{2,30}$)[a-zA-Z]+(?:\s[a-zA-Z]+)*$/;   
 const price = /^[0-9]{1,6}$/;
-const subject = /^(?=.{1,30}$)[a-zA-Z+%.]+(?:\s[a-zA-Z]+)*$/;    // 1 , 25
-const language = /^[a-zA-Z]{1,10}$/;
+const subject = /^(?=.{1,30}$)[a-zA-Z+%.]+(?:\s[a-zA-Z]+)*$/;    
+const language = /^(?=.{1,30}$)[a-zA-Z+%.]+(?:\s[a-zA-Z]+)*$/;
+const Id = /^[a-f\d]{24}$/i;
 
 module.exports = {
-    bookName , 
-    authorName , 
+    name , 
+    author , 
     price , 
     subject ,
-    language
+    language,
+    Id,
 }
