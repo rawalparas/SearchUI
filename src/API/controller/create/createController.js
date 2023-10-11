@@ -24,26 +24,19 @@ module.exports = {
           languageId: languageId._id,
         });
 
-      let searchBook = await search.findOne({s_id : bookData._id});
+      let searchBook = await findData(bookData._id);
       if(!searchBook){
-        searchBook = await search.create({
-          name : bookData.name,
-          s_id : bookData._id
-        })
+        searchBook = await createData(bookData.name, bookData._id)
       }
-      let searchAuthor = await search.findOne({s_id : authorId._id});
+
+      let searchAuthor = await findData(authorId._id);
       if(!searchAuthor){
-        searchAuthor = await search.create({
-          name : authorId.name,
-          s_id : authorId._id
-        })
+        searchAuthor = await createData(authorId.name , authorId._id);
       }
-      let searchLanguage = await search.findOne({s_id : languageId._id});
+
+      let searchLanguage = await findData(languageId._id);
       if(!searchLanguage){
-        searchName = await search.create({
-          name : languageId.name,
-          s_id : languageId._id
-        })
+        searchLanguage = await createData(languageId.name , languageId._id)
       }
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {
@@ -51,3 +44,16 @@ module.exports = {
     }
   }
 };
+
+async function findData(Object_id){
+  return await search.findOne({
+    s_id : Object_id
+  })
+}
+
+async function createData(name , Object_id){
+  return await search.create({
+    name,
+    s_id : Object_id
+  })
+}
