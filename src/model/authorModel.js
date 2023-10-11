@@ -3,15 +3,16 @@ const regex = require('../helper/regexPatterns.js');
 const validateSchemaName = require('../helper/helperMethods.js')
 
 const authorSchema = new mongoose.Schema({
-    name : {
+    name: {
         type: String,
         required: true,
+        unique: true,
         validate: {
-            validator : function(value){
-                return validateSchemaName.validateName( value , regex.author)
+            validator: function (value) {
+                return validateSchemaName.validateName(value, regex.author)
             },
-            message : function(props){
-                const message = validateSchemaName.validateMessageName( props , regex.author);
+            message: function (props) {
+                const message = validateSchemaName.validateMessageName(props, regex.author);
                 return message;
             },
         }
