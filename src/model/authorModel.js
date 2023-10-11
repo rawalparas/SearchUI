@@ -1,20 +1,19 @@
 const mongoose = require('mongoose');
-const messages = require('../helper/messages.js');
 const regex = require('../helper/regexPatterns.js');
-const validateSchemaName = require('../helper/validateModelMethod.js')
+const validateSchemaName = require('../helper/helperMethods.js')
 
 const authorSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
         validate: {
-            validator: function (value) {
-                return validateSchemaName.validateName(value, regex.name);
+            validator : function(value){
+                return validateSchemaName.validateName( value , regex.author)
             },
-            message: function (props) {
-                return validateSchemaName.validateMessageName(props, regex.name)
-            }
+            message : function(props){
+                const message = validateSchemaName.validateMessageName( props , regex.author);
+                return message;
+            },
         }
     }
 });

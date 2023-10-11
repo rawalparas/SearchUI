@@ -11,7 +11,8 @@ const searchSchema = new mongoose.Schema({
                 return validateModel.validateName(value , regex.name)
             },
             message : function(props){
-                return validateModel.validateMessageName(props , regex.name)
+                const message = validateModel.validateMessageName(props , regex.name);
+                return message;
             }
         }
     },
