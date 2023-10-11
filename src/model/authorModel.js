@@ -6,6 +6,7 @@ const authorSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        unique : true,
         validate: {
             validator : function(value){
                 return validateSchemaName.validateName( value , regex.author)

@@ -24,21 +24,21 @@ module.exports = {
           languageId: languageId._id,
         });
 
-      let searchName = await search.findOne({name : req.body.name});
-      if(!searchName){
-        searchName = await search.create({
+      let searchBook = await search.findOne({s_id : bookData._id});
+      if(!searchBook){
+        searchBook = await search.create({
           name : bookData.name,
           s_id : bookData._id
         })
       }
-      let searchAuthor = await search.findOne({name : req.body.author});
+      let searchAuthor = await search.findOne({s_id : authorId._id});
       if(!searchAuthor){
-        searchName = await search.create({
+        searchAuthor = await search.create({
           name : authorId.name,
           s_id : authorId._id
         })
       }
-      let searchLanguage = await search.findOne({name : req.body.language});
+      let searchLanguage = await search.findOne({s_id : languageId._id});
       if(!searchLanguage){
         searchName = await search.create({
           name : languageId.name,
