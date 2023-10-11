@@ -6,19 +6,21 @@ const language = require("../../../model/languageModel.js");
 module.exports = {
   insertBooks: async (req, res) => {
     try {
-      let languageId = await language.findOne({ name : req.body.language });
+      const { name : bookName , author : authorName , language : languageName} = req.body;
+      
+      let languageId = await language.findOne({ name : languageName });
       if (!languageId || languageId.length == 0) {
-        languageId = await language.create({ name : req.body.language });
+        languageId = await language.create({ name : languageName });
       }
 
-      let authorId = await author.findOne({ name : req.body.author });
+      let authorId = await author.findOne({ name : authorName });
       if (!authorId || authorId.length == 0) {
-        authorId = await author.create({ name : req.body.author });
+        authorId = await author.create({ name : authorName });
       }
 
       if (languageId._id && authorId._id) {
         bookData = await book.create({
-          name: req.body.name,
+          name: bookName,
           authorId: authorId._id,
           languageId: languageId._id,
         });

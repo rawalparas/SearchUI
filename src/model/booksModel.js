@@ -24,6 +24,7 @@ const bookSchema = new mongoose.Schema({
       ref: 'languages', // Reference to the Language model
     },
   });
+
   
 const model = mongoose.model("Book", bookSchema);
 module.exports = model;
