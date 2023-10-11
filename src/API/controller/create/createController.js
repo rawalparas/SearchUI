@@ -2,12 +2,13 @@ const author = require("../../../model/authorModel.js");
 const messages = require("../../../helper/messages.js");
 const book = require("../../../model/booksModel.js");
 const language = require("../../../model/languageModel.js");
+const { error } = require("winston");
 
 module.exports = {
   insertBooks: async (req, res) => {
     try {
       const { name : bookName , author : authorName , language : languageName} = req.body;
-      
+
       let languageId = await language.findOne({ name : languageName });
       if (!languageId || languageId.length == 0) {
         languageId = await language.create({ name : languageName });
@@ -30,7 +31,7 @@ module.exports = {
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {
       console.error(err);
-      res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+      res.status(400).json({error : err.message});
     }
   },
 };
