@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const regex = require('../helper/regexPatterns.js');
-const validateModel = require('../helper/validateModelMethod.js');
+const validateModel = require('../helper/helperMethods.js');
 
 const searchSchema = new mongoose.Schema({
     name : {
