@@ -1,4 +1,4 @@
-const message = require('../helper/messages.js');
+const message = require('./messages.js');
 
 module.exports = {
     validateName(value, regex) {

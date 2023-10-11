@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const regex = require('../helper/regexPatterns.js');
-const validateSchemaName = require('../helper/validateModelMethod.js')
+const validateSchemaName = require('../helper/helperMethods.js')
 
 const languageSchema = new mongoose.Schema({
     name: {
@@ -10,7 +10,8 @@ const languageSchema = new mongoose.Schema({
                 return validateSchemaName.validateName(value , regex.language)
             },
             message : function(props){
-                return validateSchemaName.validateMessageName(props , regex.language)
+                const message = validateSchemaName.validateMessageName(props , regex.language)
+                return message;
             }
         },
     },

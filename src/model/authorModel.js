@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const regex = require('../helper/regexPatterns.js');
-const validateSchemaName = require('../helper/validateModelMethod.js')
+const validateSchemaName = require('../helper/helperMethods.js')
 
 const authorSchema = new mongoose.Schema({
     name : {
@@ -11,12 +11,12 @@ const authorSchema = new mongoose.Schema({
                 return validateSchemaName.validateName( value , regex.author)
             },
             message : function(props){
-                return validateSchemaName.validateMessageName( props , regex.author)
-            }
+                const message = validateSchemaName.validateMessageName( props , regex.author);
+                return message;
+            },
         }
     }
 });
-
 
 const model = mongoose.model("author", authorSchema);
 module.exports = model;

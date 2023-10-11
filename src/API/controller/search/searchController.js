@@ -1,5 +1,5 @@
 const messages = require("../../../helper/messages.js");
-const books  = require('../../../model/booksModel.js');
+const books  = require('../../../model/bookModel.js');
 
 module.exports = {
   // method to get all the details of books.
