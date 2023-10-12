@@ -1,26 +1,30 @@
-const author = require("../../../model/authorModel.js");
+const authorModel = require("../../../model/authorModel.js");
 const messages = require("../../../helper/messages.js");
-const book = require("../../../model/bookModel.js");
-const language = require("../../../model/languageModel.js");
-const search = require('../../../model/searchModel.js');
+const bookModel = require("../../../model/bookModel.js");
+const languageModel = require("../../../model/languageModel.js");
+const searchModel = require('../../../model/searchModel.js');
 
 module.exports = {
   insertBooks: async (req, res) => {
     try {
-      const { name: bookName, author: authorName, language: languageName } = req.body;
+      const { name , author, language } = req.body;
 
-      let languageId = await createIfNotExist(language, { name : languageName});
-      let authorId = await createIfNotExist(author, { name : authorName });
+      const [languageId , authorId] = await Promise.all([
+        createIfNotExist(languageModel, { name : language}),
+        createIfNotExist(authorModel, { name : author })
+      ]);
 
-      let bookData = await book.create({
-        name: bookName,
+      let bookData = await bookModel.create({
+        name: name,
         authorId: authorId._id,
         languageId: languageId._id,
       });
 
-      let searchModel = createIfNotExist(search , {name : bookData.name, s_id : bookData._id});
-      searchModel = createIfNotExist(search , {name : authorId.name, s_id : authorId._id});
-      searchModel = createIfNotExist(search , {name : languageId.name, s_id : languageId._id});
+      await Promise.all([
+        createIfNotExist(searchModel , {name : bookData.name, s_id : bookData._id}),
+        createIfNotExist(searchModel , {name : authorId.name, s_id : authorId._id}),
+        createIfNotExist(searchModel , {name : languageId.name, s_id : languageId._id})
+      ]);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {

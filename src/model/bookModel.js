@@ -6,7 +6,7 @@ const bookSchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,
-      unique : true,
+      unique : [true , "Duplicate Book Found"],
       validate : {
         validator : function(value){
           return validateSchemaName.validateName(value,regex.name);
