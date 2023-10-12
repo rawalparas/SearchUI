@@ -9,19 +9,18 @@ module.exports = {
     try {
       const { name: bookName, author: authorName, language: languageName } = req.body;
 
-      let languageId = await findAndCreate(language, languageName);
-      let authorId = await findAndCreate(author, authorName);
+      let languageId = await createIfNotExist(language, { name : languageName});
+      let authorId = await createIfNotExist(author, { name : authorName });
 
-      bookData = await book.create({
+      let bookData = await book.create({
         name: bookName,
         authorId: authorId._id,
         languageId: languageId._id,
       });
 
-      let search = await findAndCreateSearch(bookData.name, bookData._id);
-      search = await findAndCreateSearch(authorId.name, authorId._id);
-      search = await findAndCreateSearch(languageId.name, languageId._id);
-
+      let searchModel = createIfNotExist(search , {name : bookData.name, s_id : bookData._id});
+      searchModel = createIfNotExist(search , {name : authorId.name, s_id : authorId._id});
+      searchModel = createIfNotExist(search , {name : languageId.name, s_id : languageId._id});
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {
@@ -30,6 +29,25 @@ module.exports = {
   }
 };
 
+
+function createIfNotExist(model, query) {
+  return new Promise((resolve, reject) => {
+    model.findOne(query)
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(model.create(query));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreate" , error);
+        reject(error);
+      });
+  });
+}
+
+/*
 function findAndCreateSearch(name, object_id) {
   return new Promise((resolve, reject) => {
     search.findOne({ s_id: object_id })
@@ -47,6 +65,7 @@ function findAndCreateSearch(name, object_id) {
   });
 }
 
+/*
 function findAndCreate(model, name) {
   return new Promise((resolve, reject) => {
     model.findOne({ name: name })
@@ -63,14 +82,5 @@ function findAndCreate(model, name) {
       });
   });
 }
+*/
 
-// async function findAndCreate(model, name) {
-//   try {
-//     let modelId = await model.findOne({ name: name });
-//     if (!modelId) modelId = await model.create({ name: name });
-//     return modelId;
-//   } catch (error) {
-//     console.log(error);
-//     throw error;
-//   }
-// }
