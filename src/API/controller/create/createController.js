@@ -9,8 +9,8 @@ module.exports = {
     try {
       const { name: bookName, author: authorName, language: languageName } = req.body;
 
-      let languageId = await findAndCreate(language , languageName);
-      let authorId = await findAndCreate(author , authorName );
+      let languageId = await findAndCreate(language, languageName);
+      let authorId = await findAndCreate(author, authorName);
 
       bookData = await book.create({
         name: bookName,
@@ -18,14 +18,10 @@ module.exports = {
         languageId: languageId._id,
       });
 
-      let searchBook = await findData(bookData._id);
-      if (!searchBook) searchBook = await createData(bookData.name, bookData._id);
+      let search = await findAndCreateSearch(bookData.name, bookData._id);
+      search = await findAndCreateSearch(authorId.name, authorId._id);
+      search = await findAndCreateSearch(languageId.name, languageId._id);
 
-      let searchAuthor = await findData(authorId._id);
-      if (!searchAuthor) searchAuthor = await createData(authorId.name, authorId._id);
-
-      let searchLanguage = await findData(languageId._id);
-      if (!searchLanguage) searchLanguage = await createData(languageId.name, languageId._id);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {
@@ -34,50 +30,47 @@ module.exports = {
   }
 };
 
-
-async function findAndCreate(model , name){
-  try{
-    console.log(model);
-    console.log(name);
-    let modelId = await model.findOne({name : name});
-    if(!modelId) modelId = await model.create({name : name});
-    return modelId;
-  }catch(error){
-    console.log(error);
-    return res.status(400).send(messages.BAD_REQUEST);
-  }
-}
-
-
-function findData(Object_id) {
+function findAndCreateSearch(name, object_id) {
   return new Promise((resolve, reject) => {
-    search.findOne({ s_id: Object_id })
+    search.findOne({ s_id: object_id })
       .then((result) => {
-        resolve(result);
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(search.create({ name: name, s_id: object_id }));
+        }
       })
       .catch((error) => {
-        console.log("Error in findData:", error);
+        console.log("Error in findAndCreateSearch", error);
         reject(error);
       });
   });
 }
 
-function createData(name, Object_id) {
+function findAndCreate(model, name) {
   return new Promise((resolve, reject) => {
-    search.create({
-      name,
-      s_id: Object_id
-    }).then((result) => {
-      resolve(result);
-    })
+    model.findOne({ name: name })
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(model.create({ name: name }));
+        }
+      })
       .catch((error) => {
-        console.log("Error in createData", error);
+        console.log("Error in findAndCreate" , error);
         reject(error);
       });
   });
 }
 
-
-
-      // if (!authorId || authorId.length == 0) authorId = await author.create({ name: authorName });
-      // if (!languageId || languageId.length == 0) languageId = await language.create({ name: languageName });
+// async function findAndCreate(model, name) {
+//   try {
+//     let modelId = await model.findOne({ name: name });
+//     if (!modelId) modelId = await model.create({ name: name });
+//     return modelId;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// }
