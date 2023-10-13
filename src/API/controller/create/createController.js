@@ -3,6 +3,7 @@ const bookModel = require("../../../model/bookModel.js");
 const languageModel = require("../../../model/languageModel.js");
 const searchModel = require('../../../model/searchModel.js');
 const messages = require("../../../helper/messages.js");
+const mongoose = require('mongoose');
 
 module.exports = {
   insertBooks: async (req, res) => {
@@ -28,7 +29,7 @@ module.exports = {
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {
-      if(err instanceof Error){
+      if(err instanceof mongoose.Error.ValidationError){
         return res.status(400).send(err.message)
       }
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -48,7 +49,7 @@ function createIfNotExist(model, query) {
       })
       .catch((error) => {
         console.log("Error in findAndCreate" , error);
-        throw new Error(error);
+        throw error;
       });
   });
 }
