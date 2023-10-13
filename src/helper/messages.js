@@ -18,7 +18,7 @@ const INTERNAL_SERVER_ERROR = "Internal Server Error";
 const SUCCESSSFUL_GET = "Successfully getting the data";
 const EMPTY_COLLECTION = "Collection is empty"
 const REGEX_PATTERN_UNMATCHED = "Field does not match the required pattern";
-const MUST_BE_UNIQUE = "Value must be unique";
+const BOOKNAME_MUST_BE_UNIQUE = "Value must be unique";
 
 module.exports = {
     REGEX_PATTERN_UNMATCHED ,
@@ -42,5 +42,5 @@ module.exports = {
     SUCCESSSFULLY_CREATED ,
     REQUEST_BODY_NOT_BE_EMPTY,
     BAD_REQUEST , 
-    MUST_BE_UNIQUE 
+    BOOKNAME_MUST_BE_UNIQUE 
 };

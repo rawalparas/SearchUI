@@ -28,7 +28,7 @@ const bookSchema = new mongoose.Schema({
       ref: 'languages', // Reference to the Language model
     },
   });
-bookSchema.plugin(uniqueValidator , { message : messages.MUST_BE_UNIQUE });
+bookSchema.plugin(uniqueValidator , { message : messages.BOOKNAME_MUST_BE_UNIQUE });
 
 const model = mongoose.model("Book", bookSchema);
 module.exports = model;

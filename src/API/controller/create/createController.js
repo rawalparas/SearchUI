@@ -8,11 +8,13 @@ module.exports = {
   insertBooks: async (req, res) => {
     try {
       const { name , author, language } = req.body;
+      console.log("Hello 1")
 
       const [languageId , authorId] = await Promise.all([
         createIfNotExist(languageModel, { name : language}),
         createIfNotExist(authorModel, { name : author })
       ]);
+      console.log("Hello 2");
 
       let bookData = await bookModel.create({
         name: name,
@@ -28,7 +30,10 @@ module.exports = {
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {
-      return res.status(400).send(err.message)
+      if(err instanceof Error){
+        return res.status(400).send(err.message)
+      }
+      return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   }
 };
@@ -46,7 +51,45 @@ function createIfNotExist(model, query) {
       })
       .catch((error) => {
         console.log("Error in findAndCreate" , error);
+        throw new Error(error);
+      });
+  });
+}
+
+/*
+function findAndCreateSearch(name, object_id) {
+  return new Promise((resolve, reject) => {
+    search.findOne({ s_id: object_id })
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(search.create({ name: name, s_id: object_id }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreateSearch", error);
         reject(error);
       });
   });
 }
+
+/*
+function findAndCreate(model, name) {
+  return new Promise((resolve, reject) => {
+    model.findOne({ name: name })
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(model.create({ name: name }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreate" , error);
+        reject(error);
+      });
+  });
+}
+*/
+
