@@ -1,30 +1,94 @@
-const author = require("../../../model/authorModel.js");
+const authorModel = require("../../../model/authorModel.js");
+const bookModel = require("../../../model/bookModel.js");
+const languageModel = require("../../../model/languageModel.js");
+const searchModel = require('../../../model/searchModel.js');
 const messages = require("../../../helper/messages.js");
-const book = require("../../../model/bookModel.js");
-const language = require("../../../model/languageModel.js");
+const mongoose = require('mongoose');
 
 module.exports = {
   insertBooks: async (req, res) => {
     try {
-      const { name: bookName, author: authorName, language: languageName } = req.body;
+      const { name , author, language } = req.body;
 
-      let languageId = await language.findOne({ name: languageName });
-      if (!languageId || languageId.length == 0) {
-        languageId = await language.create({ name: languageName });
-      }
+      const [languageId , authorId] = await Promise.all([
+        createIfNotExist(languageModel, { name : language}),
+        createIfNotExist(authorModel, { name : author })
+      ]);
 
-      let authorId = await author.findOne({ name: authorName });
-      if (!authorId || authorId.length == 0) {
-        authorId = await author.create({ name: authorName });
-      }
-      bookData = await book.create({
-          name: bookName,
-          authorId: authorId._id,
-          languageId: languageId._id,
-        });
+      let bookData = await bookModel.create({
+        name: name,
+        authorId: authorId._id,
+        languageId: languageId._id,
+      });
+
+      await Promise.all([
+        createIfNotExist(searchModel , {name : bookData.name, s_id : bookData._id}),
+        createIfNotExist(searchModel , {name : authorId.name, s_id : authorId._id}),
+        createIfNotExist(searchModel , {name : languageId.name, s_id : languageId._id})
+      ]);
+
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
     } catch (err) {
-      return res.status(400).send(err.message)
+      if(err instanceof mongoose.Error.ValidationError){
+        return res.status(400).send(err.message)
+      }
+      return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
-  },
+  }
 };
+
+function createIfNotExist(model, query) {
+  return new Promise((resolve, reject) => {
+    model.findOne(query)
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(model.create(query));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreate" , error);
+        throw error;
+      });
+  });
+}
+
+/*
+function findAndCreateSearch(name, object_id) {
+  return new Promise((resolve, reject) => {
+    search.findOne({ s_id: object_id })
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(search.create({ name: name, s_id: object_id }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreateSearch", error);
+        reject(error);
+      });
+  });
+}
+
+/*
+function findAndCreate(model, name) {
+  return new Promise((resolve, reject) => {
+    model.findOne({ name: name })
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(model.create({ name: name }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreate" , error);
+        reject(error);
+      });
+  });
+}
+
+*/
+
