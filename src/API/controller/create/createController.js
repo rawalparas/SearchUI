@@ -38,7 +38,6 @@ module.exports = {
   }
 };
 
-
 function createIfNotExist(model, query) {
   return new Promise((resolve, reject) => {
     model.findOne(query)
@@ -91,5 +90,6 @@ function findAndCreate(model, name) {
       });
   });
 }
+
 */
 
