@@ -8,13 +8,11 @@ module.exports = {
   insertBooks: async (req, res) => {
     try {
       const { name , author, language } = req.body;
-      console.log("Hello 1")
 
       const [languageId , authorId] = await Promise.all([
         createIfNotExist(languageModel, { name : language}),
         createIfNotExist(authorModel, { name : author })
       ]);
-      console.log("Hello 2");
 
       let bookData = await bookModel.create({
         name: name,
