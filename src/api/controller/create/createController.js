@@ -1,9 +1,9 @@
+const mongoose = require('mongoose');
 const authorModel = require("../../../model/authorModel.js");
 const bookModel = require("../../../model/bookModel.js");
 const languageModel = require("../../../model/languageModel.js");
 const searchModel = require('../../../model/searchModel.js');
 const messages = require("../../../helper/messages.js");
-const mongoose = require('mongoose');
 
 module.exports = {
   insertBooks: async (req, res) => {
@@ -53,42 +53,3 @@ function createIfNotExist(model, query) {
       });
   });
 }
-
-/*
-function findAndCreateSearch(name, object_id) {
-  return new Promise((resolve, reject) => {
-    search.findOne({ s_id: object_id })
-      .then((result) => {
-        if (result) {
-          resolve(result);
-        } else {
-          resolve(search.create({ name: name, s_id: object_id }));
-        }
-      })
-      .catch((error) => {
-        console.log("Error in findAndCreateSearch", error);
-        reject(error);
-      });
-  });
-}
-
-/*
-function findAndCreate(model, name) {
-  return new Promise((resolve, reject) => {
-    model.findOne({ name: name })
-      .then((result) => {
-        if (result) {
-          resolve(result);
-        } else {
-          resolve(model.create({ name: name }));
-        }
-      })
-      .catch((error) => {
-        console.log("Error in findAndCreate" , error);
-        reject(error);
-      });
-  });
-}
-
-*/
-
