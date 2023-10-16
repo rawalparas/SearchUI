@@ -8,7 +8,7 @@ const PORT = process.env.PORT;
 require('./databaseConn.js');
 
 app.use(express.json());
-const allRoutes = require('./src/API/controller');
+const allRoutes = require('./src/api/controller');
 app.use(cors());
 
 app.use('/api', allRoutes);

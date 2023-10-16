@@ -4,7 +4,6 @@ const languageModel = require("../../../model/languageModel.js");
 const searchModel = require('../../../model/searchModel.js');
 const mongoose = require('mongoose');
 const messages = require("../../../helper/messages.js");
-const mongoose = require('mongoose');
 
 module.exports = {
   insertBooks: async (req, res) => {

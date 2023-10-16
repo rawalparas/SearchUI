@@ -11,6 +11,6 @@ module.exports = {
     search : Joi.object({
         search : Joi.string().required(),
         pageNumber : Joi.number().min(1).required(),
-        limit : Joi.number()
+        limit : Joi.number().optional()
     })
 }

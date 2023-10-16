@@ -21,7 +21,7 @@ module.exports = {
     try {
       let search = req.body.search;
       const pageNumber = req.body.pageNumber;
-      const limit = req.body.limit || 5;
+      const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
       const searchData = await searchModel
         .aggregate([
