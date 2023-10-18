@@ -36,4 +36,11 @@ module.exports = {
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
+  searchbySearchID : async(req , res) => {
+    try{
+
+    }catch(error){
+      
+    }
+  }
 };

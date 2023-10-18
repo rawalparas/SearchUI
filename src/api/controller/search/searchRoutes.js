@@ -8,5 +8,6 @@ const searchController = require('./searchController.js');
 
 router.get('/searchbook' , validation.validate(schema.search) , searchController.searchBook);
 router.post('/searchdata' , validation.validate(schema.search) , searchController.searchData);
+router.post('/searchId' , searchController.searchbySearchID);
 
 module.exports = router;

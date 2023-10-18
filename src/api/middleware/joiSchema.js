@@ -1,6 +1,4 @@
 const Joi = require('joi');
-const message = require('../../helper/messages.js');
-const regex = require('../../helper/regexPatterns.js');
 
 module.exports = {
     insert : Joi.object({
@@ -10,6 +8,11 @@ module.exports = {
     }),
     search : Joi.object({
         search : Joi.string().required(),
+        pageNumber : Joi.number().min(1).required(),
+        limit : Joi.number().optional()
+    }),
+    book : Joi.object({
+        searchId : Joi.string().required(),
         pageNumber : Joi.number().min(1).required(),
         limit : Joi.number().optional()
     })
