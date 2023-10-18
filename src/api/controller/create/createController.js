@@ -22,9 +22,9 @@ module.exports = {
       });
 
       await Promise.all([
-        createIfNotExist(searchModel , {name : bookData.name, s_id : bookData._id}),
-        createIfNotExist(searchModel , {name : authorId.name, s_id : authorId._id}),
-        createIfNotExist(searchModel , {name : languageId.name, s_id : languageId._id})
+        createIfNotExist(searchModel , {name : bookData.name, type : "book", s_id : bookData._id}),
+        createIfNotExist(searchModel , {name : authorId.name, type : "author", s_id : authorId._id}),
+        createIfNotExist(searchModel , {name : languageId.name, type : "language", s_id : languageId._id})
       ]);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
@@ -41,6 +41,7 @@ function createIfNotExist(model, query) {
   return new Promise((resolve, reject) => {
     model.findOne(query)
       .then((result) => {
+        resolve(result)
         if (result) {
           resolve(result);
         } else {

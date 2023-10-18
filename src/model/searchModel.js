@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const regex = require('../helper/regexPatterns.js');
 const validateModel = require('../helper/helperMethods.js');
+const { string } = require('joi');
 
 const searchSchema = new mongoose.Schema({
     name : {
@@ -15,6 +16,10 @@ const searchSchema = new mongoose.Schema({
                 return message;
             }
         }
+    },
+    type : {
+        type : String,
+        required : true
     },
     s_id : {
         type : mongoose.Schema.Types.ObjectId,
