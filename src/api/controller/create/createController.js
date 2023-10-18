@@ -41,7 +41,6 @@ function createIfNotExist(model, query) {
   return new Promise((resolve, reject) => {
     model.findOne(query)
       .then((result) => {
-        resolve(result)
         if (result) {
           resolve(result);
         } else {
@@ -54,3 +53,41 @@ function createIfNotExist(model, query) {
       });
   });
 }
+
+/*
+function findAndCreateSearch(name, object_id) {
+  return new Promise((resolve, reject) => {
+    search.findOne({ s_id: object_id })
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(search.create({ name: name, s_id: object_id }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreateSearch", error);
+        reject(error);
+      });
+  });
+}
+
+/*
+function findAndCreate(model, name) {
+  return new Promise((resolve, reject) => {
+    model.findOne({ name: name })
+      .then((result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          resolve(model.create({ name: name }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error in findAndCreate" , error);
+        reject(error);
+      });
+  });
+}
+
+*/

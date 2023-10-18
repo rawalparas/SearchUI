@@ -1,7 +1,8 @@
 const messages = require("../../../helper/messages.js");
-const bookModel = require("../../../model/bookModel.js");
 const searchModel = require("../../../model/searchModel.js");
-const mongoose = require('mongoose');
+const bookModel = require("../../../model/bookModel.js");
+const authorModel = require('../../../model/authorModel.js');
+const languageModel = require('../../../model/languageModel.js');
 
 module.exports = {
   // method to get all the details of books.
@@ -18,7 +19,7 @@ module.exports = {
     }
   },
   // method to get the data from the search collection.
-  globalSearch : async (req, res) => {
+  globalSearch: async (req, res) => {
     try {
       let search = req.body.search;
       const pageNumber = req.body.pageNumber;
@@ -27,7 +28,7 @@ module.exports = {
       const searchData = await searchModel
         .aggregate([
           { $match: { name: { $regex: search, $options: "i" } } },
-          { $project: { name: 1, s_id: 1 , _id : 0} },
+          { $project: { name: 1, s_id: 1, _id: 0 } },
         ])
         .skip(offset)
         .limit(limit);
@@ -37,36 +38,45 @@ module.exports = {
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
-  bookSearch : async(req , res) => {
-    try{
-      const searchId = req.body.searchId;
+  bookSearch: async (req, res) => {
+    try {
+      let searchId = req.body.searchId;
       const type = req.body.type;
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
-      const offset = (pageNumber-1) * limit;
+      const offset = (pageNumber - 1) * limit;
 
-      console.log(searchId);
-      console.log(type);
-      console.log(pageNumber);
-      console.log(offset);
-      
-      switch(type):
-      case : author
+      let searchResult;
 
-    
+      switch (type) {
+        case "book":
+          searchResult = await findbook(bookModel, { _id: searchId } , offset , limit);
+          break;
+        case "author":
+          searchResult = await findbook(authorModel, { _id: searchId } , offset , limit);
+          break;
+        case "language":
+          searchResult = await findbook(languageModel, { _id: searchId }  , offset , limit);
+          break;
+        default:
+          return res.status(400).send(messages.INVALID_SEARCH);
+      }
 
-      // const searchBookbySearchID = await findbook(type , {_id : searchId})
-
-      return res.status(200).send(searchBookbySearchID);
-    }catch(error){
+      if (searchResult) {
+        return res.status(200).send(searchResult);
+      } else {
+        return res.status(404).send(messages.NO_RESULTS_FOUND);
+      }
+    } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   }
 };
 
-function findbook(type, query){
-  return type.find(query).exec();
+
+function findbook(model, query , offset , limit) {
+  return model.find(query).skip(offset).limit(limit);
 }
 
 
@@ -83,39 +93,3 @@ function findbook(type, query){
 //   })
 // }
 
-
-
-/*
-const messages = {
-  INTERNAL_SERVER_ERROR: 'Internal server error occurred.',
-};
-
-const searchBySearchID = async (req, res) => {
-  try {
-    const searchId = req.body.searchId;
-    const type = req.body.type;
-    const pageNumber = req.body.pageNumber;
-    const limit = req.body.limit || 10;
-    const offset = (pageNumber - 1) * limit;
-
-    const searchBookbySearchID = await findBook(type, { _id: searchId });
-
-    if (searchBookbySearchID) {
-      return res.status(200).send(searchBookbySearchID);
-    } else {
-      return res.status(404).send('No matching records found.');
-    }
-  } catch (error) {
-    console.error('Error in searchBySearchID:', error);
-    return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-  }
-};
-
-function findBook(model, query) {
-  return model.find(query).exec(); // Use .exec() to return a promise
-}
-
-module.exports = {
-  searchBySearchID,
-};
-*/
