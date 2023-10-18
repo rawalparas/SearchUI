@@ -49,12 +49,13 @@ module.exports = {
       console.log(type);
       console.log(pageNumber);
       console.log(offset);
+      
+      switch(type):
+      case : author
 
-      // const searchBookbySearchID = await Promise.all([
-      //   findbook(type , {_id : searchId})
-      // ]);
+    
 
-      const searchBookbySearchID = await findbook(type , {_id : searchId})
+      // const searchBookbySearchID = await findbook(type , {_id : searchId})
 
       return res.status(200).send(searchBookbySearchID);
     }catch(error){
