@@ -22,13 +22,15 @@ module.exports = {
         languageId: languageId._id,
       });
 
-      await Promise.all([
+      const insertBooks = await Promise.all([
         createIfNotExist(searchModel , {name : bookData.name, type : "book", s_id : bookData._id}),
         createIfNotExist(searchModel , {name : authorId.name, type : "author", s_id : authorId._id}),
         createIfNotExist(searchModel , {name : languageId.name, type : "language", s_id : languageId._id})
       ]);
-
-      return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
+      if(insertBooks){
+        return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
+      }
+      return  
 
       if(err instanceof mongoose.Error.ValidationError){
         return res.status(400).send(err.message)
