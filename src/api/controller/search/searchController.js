@@ -1,8 +1,8 @@
 const messages = require("../../../helper/messages.js");
 const searchModel = require("../../../model/searchModel.js");
 const bookModel = require("../../../model/bookModel.js");
-const authorModel = require('../../../model/authorModel.js');
-const languageModel = require('../../../model/languageModel.js');
+// const authorModel = require('../../../model/authorModel.js');
+// const languageModel = require('../../../model/languageModel.js');
 
 module.exports = {
   // method to get all the details of books.
@@ -50,22 +50,22 @@ module.exports = {
 
       switch (type) {
         case "book":
-          searchResult = await findbook(bookModel, { _id: searchId } , offset , limit);
+          searchResult = await findbook({ _id: searchId } , offset , limit);
           break;
         case "author":
-          searchResult = await findbook(authorModel, { _id: searchId } , offset , limit);
+          searchResult = await findbook({ authorId : searchId } , offset , limit);
           break;
         case "language":
-          searchResult = await findbook(languageModel, { _id: searchId }  , offset , limit);
+          searchResult = await findbook({ languageId : searchId } , offset , limit);
           break;
         default:
           return res.status(400).send(messages.INVALID_SEARCH);
       }
 
-      if (searchResult) {
-        return res.status(200).send(searchResult);
-      } else {
+      if (!searchResult) {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
+      } else {
+        return res.status(200).send(searchResult);
       }
     } catch (error) {
       console.log(error);
@@ -75,21 +75,36 @@ module.exports = {
 };
 
 
-function findbook(model, query , offset , limit) {
-  return model.find(query).skip(offset).limit(limit);
+function findbook(query , offset , limit) {
+  return bookModel.find(query).skip(offset).limit(limit).populate("authorId", "-_id -__v").populate("languageId", "-_id -__v");
 }
 
 
+/*
+function findbook(model , query){
+  return new Promise((resolve , reject) => {
+    model.find(query)
+    .then((result) => {
+      resolve(result);
+    })
+    .catch((error) => {
+      console.log("Error in find", error)
 
-// function findbook(model , query){
-//   return new Promise((resolve , reject) => {
-//     model.find(query)
-//     .then((result) => {
-//       resolve(result);
-//     })
-//     .catch((error) => {
-//       console.log("Error in find", error)
-//     })
-//   })
-// }
 
+switch (type) {
+  case "book":
+    console.log(type)
+    searchResult = await findbook(bookModel, { _id: searchId } , offset , limit);
+    console.log(searchResult);
+    break;
+  case "author":
+    searchResult = await findbook(bookModel, { authorId : searchId } , offset , limit);
+    console.log(searchResult);
+    break;
+  case "language":
+    searchResult = await findbook(bookModel, { languageId : searchId }  , offset , limit);
+    console.log(searchResult);
+    break;
+  default:
+    return res.status(400).send(messages.INVALID_SEARCH);
+}*/

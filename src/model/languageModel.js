@@ -19,5 +19,5 @@ const languageSchema = new mongoose.Schema({
     },
 });
 
-const model = mongoose.model("languages", languageSchema);
+const model = mongoose.model("language", languageSchema);
 module.exports = model;

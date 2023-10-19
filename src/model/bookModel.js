@@ -25,7 +25,7 @@ const bookSchema = new mongoose.Schema({
     },
     languageId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'languages', // Reference to the Language model
+      ref: 'language', // Reference to the Language model
     },
   });
 bookSchema.plugin(uniqueValidator , { message : messages.BOOK_NAME_MUST_BE_UNIQUE });
