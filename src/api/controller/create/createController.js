@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const tryCatch = require('../../errorHandling/errohandler.js');
 const authorModel = require("../../../model/authorModel.js");
 const bookModel = require("../../../model/bookModel.js");
 const languageModel = require("../../../model/languageModel.js");
@@ -6,9 +7,9 @@ const searchModel = require('../../../model/searchModel.js');
 const messages = require("../../../helper/messages.js");
 
 module.exports = {
-  insertBooks: async (req, res) => {
-    try {
-      const { name , author, language } = req.body;
+  insertBooks : tryCatch(async (req, res) => {
+
+    const { name , author, language } = req.body;
 
       const [languageId , authorId] = await Promise.all([
         createIfNotExist(languageModel, { name : language}),
@@ -28,14 +29,13 @@ module.exports = {
       ]);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
-    } catch (err) {
+
       if(err instanceof mongoose.Error.ValidationError){
         return res.status(400).send(err.message)
       }
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
-  }
-};
+)};
 
 function createIfNotExist(model, query) {
   return new Promise((resolve, reject) => {
