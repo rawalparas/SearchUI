@@ -13,6 +13,7 @@ module.exports = {
     }),
     book : Joi.object({
         searchId : Joi.string().required(),
+        type : Joi.string().required(),
         pageNumber : Joi.number().min(1).required(),
         limit : Joi.number().optional()
     })

@@ -1,8 +1,8 @@
 const messages = require("../../../helper/messages.js");
 const searchModel = require("../../../model/searchModel.js");
 const bookModel = require("../../../model/bookModel.js");
-// const authorModel = require('../../../model/authorModel.js');
-// const languageModel = require('../../../model/languageModel.js');
+const authorModel = require('../../../model/authorModel.js');
+const languageModel = require('../../../model/languageModel.js');
 
 module.exports = {
   // method to get all the details of books.
@@ -46,27 +46,26 @@ module.exports = {
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
 
-      let searchResult;
-
-      switch (type) {
-        case "book":
-          searchResult = await findbook({ _id: searchId } , offset , limit);
+      switch (type){
+        case "book" :
+          model = bookModel;
           break;
-        case "author":
-          searchResult = await findbook({ authorId : searchId } , offset , limit);
+        case "author" :
+          model = authorModel;
           break;
-        case "language":
-          searchResult = await findbook({ languageId : searchId } , offset , limit);
+        case "language" : 
+          model = languageModel;
           break;
-        default:
-          return res.status(400).send(messages.INVALID_SEARCH);
+        default :
+          return res.status(400).send(messages.INVALID_TYPE);
       }
+      let searchResult = await findBook( model, { _id : searchId }  , offset , limit);
 
       if (!searchResult) {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
-      } else {
-        return res.status(200).send(searchResult);
-      }
+      } 
+      return res.status(200).send(searchResult); 
+
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -75,36 +74,50 @@ module.exports = {
 };
 
 
-function findbook(query , offset , limit) {
-  return bookModel.find(query).skip(offset).limit(limit).populate("authorId", "-_id -__v").populate("languageId", "-_id -__v");
+function findBook(model , query , offset , limit) {
+  return model === bookModel ? model.find(query , {_id : 0 , __v : 0}).skip(offset).limit(limit)
+  .populate("authorId", "-_id -__v")
+  .populate("languageId", "-_id -__v") 
+  : model.find(query).skip(offset).limit(limit);
 }
 
 
-/*
-function findbook(model , query){
-  return new Promise((resolve , reject) => {
-    model.find(query)
-    .then((result) => {
-      resolve(result);
-    })
-    .catch((error) => {
-      console.log("Error in find", error)
+// function findbook(query , offset , limit) {
+//   return bookModel.find(query).skip(offset).limit(limit).populate("authorId", "-_id -__v").populate("languageId", "-_id -__v");
+// }
 
 
-switch (type) {
-  case "book":
-    console.log(type)
-    searchResult = await findbook(bookModel, { _id: searchId } , offset , limit);
-    console.log(searchResult);
-    break;
-  case "author":
-    searchResult = await findbook(bookModel, { authorId : searchId } , offset , limit);
-    console.log(searchResult);
-    break;
-  case "language":
-    searchResult = await findbook(bookModel, { languageId : searchId }  , offset , limit);
-    console.log(searchResult);
-    break;
-  default:
-    return res.status(400).send(messages.INVALID_SEARCH);
-}*/
+  // bookSearch: async (req, res) => {
+  //   try {
+  //     let searchId = req.body.searchId;
+  //     const type = req.body.type;
+  //     const pageNumber = req.body.pageNumber;
+  //     const limit = req.body.limit || 10;
+  //     const offset = (pageNumber - 1) * limit;
+
+  //     let searchResult;
+
+  //     switch (type) {
+  //       case "book":
+  //         searchResult = await findbook({ _id: searchId } , offset , limit);
+  //         break;
+  //       case "author":
+  //         searchResult = await findbook({ authorId : searchId } , offset , limit);
+  //         break;
+  //       case "language":
+  //         searchResult = await findbook({ languageId : searchId } , offset , limit);
+  //         break;
+  //       default:
+  //         return res.status(400).send(messages.INVALID_SEARCH);
+  //     }
+      
+  //     if (!searchResult) {
+  //       return res.status(404).send(messages.NO_RESULTS_FOUND);
+  //     } 
+  //     return res.status(200).send(searchResult); 
+
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
