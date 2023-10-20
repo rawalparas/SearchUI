@@ -8,7 +8,7 @@ module.exports = {
   // method to get all the details of books.
   searchBook: async (req, res) => {
     try {
-      const getBooksData = await bookModel
+      const getBooksData = await bookModel.model
         .find({}, { _id: 0, __v: 0 })
         .populate("authorId", "-_id -__v")
         .populate("languageId", "-_id -__v");
@@ -48,13 +48,13 @@ module.exports = {
 
       switch (type){
         case "book" :
-          model = bookModel;
+          model = bookModel.model;
           break;
         case "author" :
-          model = authorModel;
+          model = authorModel.model;
           break;
         case "language" : 
-          model = languageModel;
+          model = languageModel.model;
           break;
         default :
           return res.status(400).send(messages.INVALID_TYPE);
@@ -75,7 +75,7 @@ module.exports = {
 
 
 function findBook(model , query , offset , limit) {
-  return model === bookModel ? model.find(query , {_id : 0 , __v : 0}).skip(offset).limit(limit)
+  return model === bookModel.model ? model.find(query , {_id : 0 , __v : 0}).skip(offset).limit(limit)
   .populate("authorId", "-_id -__v")
   .populate("languageId", "-_id -__v") 
   : model.find(query).skip(offset).limit(limit);

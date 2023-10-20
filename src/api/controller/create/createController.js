@@ -3,7 +3,6 @@ const authorModel = require("../../../model/authorModel.js");
 const bookModel = require("../../../model/bookModel.js");
 const languageModel = require("../../../model/languageModel.js");
 const searchModel = require('../../../model/searchModel.js');
-const modelsReference = require('../../../model/modelsReferencing.js');
 const messages = require("../../../helper/messages.js");
 
 module.exports = {
@@ -12,20 +11,20 @@ module.exports = {
       const { name , author, language } = req.body;
 
       const [languageId , authorId] = await Promise.all([
-        createIfNotExist(languageModel, { name : language}),
-        createIfNotExist(authorModel, { name : author })
+        createIfNotExist(languageModel.model, { name : language}),
+        createIfNotExist(authorModel.model, { name : author })
       ]);
 
-      let bookData = await bookModel.create({
+      let bookData = await bookModel.model.create({
         name: name,
         authorId: authorId._id,
         languageId: languageId._id,
       });
 
       await Promise.all([
-        createIfNotExist(searchModel , {name : bookData.name, type : modelsReference.bookType , s_id : bookData._id}),
-        createIfNotExist(searchModel , {name : authorId.name, type : modelsReference.authorType , s_id : authorId._id}),
-        createIfNotExist(searchModel , {name : languageId.name, type : modelsReference.languageType , s_id : languageId._id})
+        createIfNotExist(searchModel , {name : bookData.name, type :  bookModel.modelType , s_id : bookData._id}),
+        createIfNotExist(searchModel , {name : authorId.name, type :  authorModel.modelType , s_id : authorId._id}),
+        createIfNotExist(searchModel , {name : languageId.name, type : languageModel.modelType , s_id : languageId._id})
       ]);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
