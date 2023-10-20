@@ -1,7 +1,7 @@
 const message = require('../../helper/messages.js');
 
 module.exports = {
-    validate: (schema) => (req, res, next) => {
+    validate : (schema) => (req, res, next) => {
 
         const validationResult = req.method === 'POST' ? schema.validate(req.body) : schema.validate(req.query);
 

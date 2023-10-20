@@ -6,25 +6,25 @@ const searchModel = require('../../../model/searchModel.js');
 const messages = require("../../../helper/messages.js");
 
 module.exports = {
-  insertBooks: async (req, res) => {
+  insertBook : async (req, res) => {
     try {
       const { name , author, language } = req.body;
 
       const [languageId , authorId] = await Promise.all([
-        createIfNotExist(languageModel, { name : language}),
-        createIfNotExist(authorModel, { name : author })
+        createIfNotExist(languageModel.model, { name : language}),
+        createIfNotExist(authorModel.model, { name : author })
       ]);
 
-      let bookData = await bookModel.create({
+      let bookData = await bookModel.model.create({
         name: name,
         authorId: authorId._id,
         languageId: languageId._id,
       });
 
       await Promise.all([
-        createIfNotExist(searchModel , {name : bookData.name, s_id : bookData._id}),
-        createIfNotExist(searchModel , {name : authorId.name, s_id : authorId._id}),
-        createIfNotExist(searchModel , {name : languageId.name, s_id : languageId._id})
+        createIfNotExist(searchModel , {name : bookData.name, type :  bookModel.type , s_id : bookData._id}),
+        createIfNotExist(searchModel , {name : authorId.name, type :  authorModel.type , s_id : authorId._id}),
+        createIfNotExist(searchModel , {name : languageId.name, type : languageModel.type , s_id : languageId._id})
       ]);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);

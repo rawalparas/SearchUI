@@ -16,6 +16,10 @@ const searchSchema = new mongoose.Schema({
             }
         }
     },
+    type : {
+        type : String,
+        required : true
+    },
     s_id : {
         type : mongoose.Schema.Types.ObjectId,
         required : true

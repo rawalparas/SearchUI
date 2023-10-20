@@ -25,10 +25,13 @@ const bookSchema = new mongoose.Schema({
     },
     languageId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'languages', // Reference to the Language model
+      ref: 'language', // Reference to the Language model
     },
   });
+
+const type = "book"; 
+
 bookSchema.plugin(uniqueValidator , { message : messages.BOOK_NAME_MUST_BE_UNIQUE });
 
-const model = mongoose.model("Book", bookSchema);
-module.exports = model;
+const model = mongoose.model("Book", bookSchema );
+module.exports = {model , type};

@@ -19,6 +19,8 @@ const SUCCESSSFUL_GET = "Successfully getting the data";
 const EMPTY_COLLECTION = "Collection is empty"
 const REGEX_PATTERN_UNMATCHED = "Field does not match the required pattern";
 const BOOK_NAME_MUST_BE_UNIQUE = "Book name must be unique";
+const INVALID_TYPE = "Invalid Type Field";
+const NO_RESULTS_FOUND = "No Results Found";
 
 module.exports = {
     REGEX_PATTERN_UNMATCHED ,
@@ -42,5 +44,7 @@ module.exports = {
     SUCCESSSFULLY_CREATED ,
     REQUEST_BODY_NOT_BE_EMPTY,
     BAD_REQUEST , 
-    BOOK_NAME_MUST_BE_UNIQUE 
+    BOOK_NAME_MUST_BE_UNIQUE ,
+    NO_RESULTS_FOUND , 
+    INVALID_TYPE
 };
