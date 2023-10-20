@@ -38,7 +38,7 @@ module.exports = {
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
-  bookSearch: async (req, res) => {
+  search: async (req, res) => {
     try {
       let searchId = req.body.searchId;
       const type = req.body.type;
@@ -80,44 +80,3 @@ function findBook(model , query , offset , limit) {
   .populate("languageId", "-_id -__v") 
   : model.find(query).skip(offset).limit(limit);
 }
-
-
-// function findbook(query , offset , limit) {
-//   return bookModel.find(query).skip(offset).limit(limit).populate("authorId", "-_id -__v").populate("languageId", "-_id -__v");
-// }
-
-
-  // bookSearch: async (req, res) => {
-  //   try {
-  //     let searchId = req.body.searchId;
-  //     const type = req.body.type;
-  //     const pageNumber = req.body.pageNumber;
-  //     const limit = req.body.limit || 10;
-  //     const offset = (pageNumber - 1) * limit;
-
-  //     let searchResult;
-
-  //     switch (type) {
-  //       case "book":
-  //         searchResult = await findbook({ _id: searchId } , offset , limit);
-  //         break;
-  //       case "author":
-  //         searchResult = await findbook({ authorId : searchId } , offset , limit);
-  //         break;
-  //       case "language":
-  //         searchResult = await findbook({ languageId : searchId } , offset , limit);
-  //         break;
-  //       default:
-  //         return res.status(400).send(messages.INVALID_SEARCH);
-  //     }
-      
-  //     if (!searchResult) {
-  //       return res.status(404).send(messages.NO_RESULTS_FOUND);
-  //     } 
-  //     return res.status(200).send(searchResult); 
-
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-  //   }
-  // }

@@ -3,6 +3,7 @@ const authorModel = require("../../../model/authorModel.js");
 const bookModel = require("../../../model/bookModel.js");
 const languageModel = require("../../../model/languageModel.js");
 const searchModel = require('../../../model/searchModel.js');
+const modelsReference = require('../../../model/modelsReferencing.js');
 const messages = require("../../../helper/messages.js");
 
 module.exports = {
@@ -22,9 +23,9 @@ module.exports = {
       });
 
       await Promise.all([
-        createIfNotExist(searchModel , {name : bookData.name, type : "book", s_id : bookData._id}),
-        createIfNotExist(searchModel , {name : authorId.name, type : "author", s_id : authorId._id}),
-        createIfNotExist(searchModel , {name : languageId.name, type : "language", s_id : languageId._id})
+        createIfNotExist(searchModel , {name : bookData.name, type : modelsReference.bookType , s_id : bookData._id}),
+        createIfNotExist(searchModel , {name : authorId.name, type : modelsReference.authorType , s_id : authorId._id}),
+        createIfNotExist(searchModel , {name : languageId.name, type : modelsReference.languageType , s_id : languageId._id})
       ]);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
@@ -53,41 +54,3 @@ function createIfNotExist(model, query) {
       });
   });
 }
-
-/*
-function findAndCreateSearch(name, object_id) {
-  return new Promise((resolve, reject) => {
-    search.findOne({ s_id: object_id })
-      .then((result) => {
-        if (result) {
-          resolve(result);
-        } else {
-          resolve(search.create({ name: name, s_id: object_id }));
-        }
-      })
-      .catch((error) => {
-        console.log("Error in findAndCreateSearch", error);
-        reject(error);
-      });
-  });
-}
-
-/*
-function findAndCreate(model, name) {
-  return new Promise((resolve, reject) => {
-    model.findOne({ name: name })
-      .then((result) => {
-        if (result) {
-          resolve(result);
-        } else {
-          resolve(model.create({ name: name }));
-        }
-      })
-      .catch((error) => {
-        console.log("Error in findAndCreate" , error);
-        reject(error);
-      });
-  });
-}
-
-*/
