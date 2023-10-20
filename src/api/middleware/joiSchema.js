@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 module.exports = {
-    insertBooks : Joi.object({
+    insertBook : Joi.object({
         name : Joi.string().required(),
         author : Joi.string().required(),
         language : Joi.string().required()

@@ -6,7 +6,7 @@ const searchModel = require('../../../model/searchModel.js');
 const messages = require("../../../helper/messages.js");
 
 module.exports = {
-  insertBooks: async (req, res) => {
+  insertBook : async (req, res) => {
     try {
       const { name , author, language } = req.body;
 
