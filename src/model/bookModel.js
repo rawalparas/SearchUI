@@ -29,9 +29,9 @@ const bookSchema = new mongoose.Schema({
     },
   });
 
-const modelType = "book"; 
+const type = "book"; 
 
 bookSchema.plugin(uniqueValidator , { message : messages.BOOK_NAME_MUST_BE_UNIQUE });
 
 const model = mongoose.model("Book", bookSchema );
-module.exports = {model , modelType};
+module.exports = {model , type};

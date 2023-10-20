@@ -22,9 +22,9 @@ module.exports = {
       });
 
       await Promise.all([
-        createIfNotExist(searchModel , {name : bookData.name, type :  bookModel.modelType , s_id : bookData._id}),
-        createIfNotExist(searchModel , {name : authorId.name, type :  authorModel.modelType , s_id : authorId._id}),
-        createIfNotExist(searchModel , {name : languageId.name, type : languageModel.modelType , s_id : languageId._id})
+        createIfNotExist(searchModel , {name : bookData.name, type :  bookModel.type , s_id : bookData._id}),
+        createIfNotExist(searchModel , {name : authorId.name, type :  authorModel.type , s_id : authorId._id}),
+        createIfNotExist(searchModel , {name : languageId.name, type : languageModel.type , s_id : languageId._id})
       ]);
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);

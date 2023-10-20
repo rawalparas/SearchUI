@@ -6,7 +6,7 @@ const languageModel = require('../../../model/languageModel.js');
 
 module.exports = {
   // method to get all the details of books.
-  searchBook: async (req, res) => {
+  allBook : async (req, res) => {
     try {
       const getBooksData = await bookModel.model
         .find({}, { _id: 0, __v: 0 })
