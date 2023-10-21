@@ -1,6 +1,9 @@
 const Joi = require('joi');
 
 module.exports = {
+    fuzzySearch : Joi.object({
+        search : Joi.string().required()
+    }),
     insertBook : Joi.object({
         name : Joi.string().required(),
         author : Joi.string().required(),
