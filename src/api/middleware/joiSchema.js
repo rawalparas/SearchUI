@@ -1,17 +1,20 @@
 const Joi = require('joi');
 
 module.exports = {
-    insert : Joi.object({
+    fuzzySearch : Joi.object({
+        search : Joi.string().required()
+    }),
+    insertBook : Joi.object({
         name : Joi.string().required(),
         author : Joi.string().required(),
         language : Joi.string().required()
     }),
-    search : Joi.object({
+    globalSearch : Joi.object({
         search : Joi.string().required(),
         pageNumber : Joi.number().min(1).required(),
         limit : Joi.number().optional()
     }),
-    book : Joi.object({
+    search : Joi.object({
         searchId : Joi.string().required(),
         type : Joi.string().required(),
         pageNumber : Joi.number().min(1).required(),

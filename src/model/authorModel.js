@@ -19,6 +19,7 @@ const authorSchema = new mongoose.Schema({
         }
     }
 });
+const type = "author";
 
-const model = mongoose.model("author", authorSchema);
-module.exports = model;
+const model = mongoose.model("author", authorSchema );
+module.exports = { model , type};
