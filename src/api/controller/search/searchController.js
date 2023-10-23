@@ -56,14 +56,27 @@ module.exports = {
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
+
+      const fuzzySearch = await searchModel.find({}).skip(offset).limit(limit); 
+
       const searchData = await searchModel
         .aggregate([
-          { $match: { name: { $regex: search, $options: "i" } } },
+          { $match: { name: { $regex : search, $options: "i" } } },
           { $project: { name: 1, s_id: 1, _id: 0 } },
         ])
         .skip(offset)
         .limit(limit);
-      return res.status(200).send(searchData);
+
+      const options = {
+        keys : ['name'],
+        includeScore : true,
+        threshold : 0.4
+      }
+
+      let fuse = new Fuse(fuzzySearch , options);
+      searchUsingFuzzy = fuse.search(search);
+
+      return res.status(200).json({"Using Regex" : searchData , "Using fuzzysearch" : searchUsingFuzzy});
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -92,16 +105,20 @@ module.exports = {
       }
       let searchResult = await findBook(model, { _id: searchId }, offset, limit);
 
+      console.log(searchResult)
+
       let options = {
         keys : ['name'],
         includeScore : true,
         threshold : 0.4
       };
 
-      let fuse = new Fuse(searchResult , options);
-      searchResult = fuse.search(model.name);
+      searchResult = fuzzySearch(searchResult, searchId);
 
-      if (!searchResult) {
+      // let fuse = new Fuse(searchResult , options);
+      // searchResult = fuse.search(searchId);
+
+      if (searchResult.length === 0) {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
       }
       return res.status(200).send(searchResult);
@@ -114,11 +131,24 @@ module.exports = {
 };
 
 
+const fuzzySearch = (list, searchId) => {
+  let options = {
+    keys: ['name'],
+    includeScore: true,
+    threshold: 0.4,
+    isCaseSensitive: false, // You can adjust this option as needed
+    includeMatches: true, // This will include the matched characters
+  };
+
+  let fuse = new Fuse(list, options);
+  return fuse.search(searchId);
+};
+
 function findBook(model, query, offset, limit) {
-  return model === bookModel.model ? model.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit)
+  return model === bookModel.model ? model.find(query , { _id: 0, __v: 0 }).skip(offset).limit(limit)
     .populate("authorId", "-_id -__v")
     .populate("languageId", "-_id -__v")
     : model.find(query).skip(offset).limit(limit);
 }
 
- // const foundBooks = searchResult.map((result) => result.item);
+ // const foundBooks = searchResult.map((result) => result.item); 
