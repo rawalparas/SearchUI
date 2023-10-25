@@ -7,8 +7,8 @@ const schema = require('../../middleware/joiSchema.js');
 const searchController = require('./searchController.js'); 
 
 router.get('/allbook' , searchController.allBook);
-router.get('/search/fuzzy' , validation.validate(schema.fuzzySearch) , searchController.fuzzySearch);
-router.post('/search' , validation.validate(schema.globalSearch) , searchController.globalSearch);
-router.post('/book' , validation.validate(schema.search) , searchController.search);
+router.get('/allbook/fuzzysearch' , validation.validate(schema.fuzzySearch) , searchController.fuzzySearch);
+router.post('/globalsearch' , validation.validate(schema.globalSearch) , searchController.globalSearch);
+router.post('/search' , validation.validate(schema.search) , searchController.search);
 
 module.exports = router;

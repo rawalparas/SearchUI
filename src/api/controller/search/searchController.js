@@ -107,16 +107,7 @@ module.exports = {
 
       console.log(searchResult)
 
-      let options = {
-        keys : ['name'],
-        includeScore : true,
-        threshold : 0.4
-      };
-
       searchResult = fuzzySearch(searchResult, searchId);
-
-      // let fuse = new Fuse(searchResult , options);
-      // searchResult = fuse.search(searchId);
 
       if (searchResult.length === 0) {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
@@ -130,17 +121,19 @@ module.exports = {
   }
 };
 
-
 const fuzzySearch = (list, searchId) => {
   let options = {
-    keys: ['name'],
+    keys: ['_id'],
     includeScore: true,
     threshold: 0.4,
-    isCaseSensitive: false, // You can adjust this option as needed
-    includeMatches: true, // This will include the matched characters
+    // isCaseSensitive: false, 
+    // includeMatches: true, 
   };
 
   let fuse = new Fuse(list, options);
+  console.log(list)
+  console.log(options.keys)
+  console.log(fuse)
   return fuse.search(searchId);
 };
 
