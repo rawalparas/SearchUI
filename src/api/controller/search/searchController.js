@@ -74,6 +74,41 @@ module.exports = {
     }
   },
   // method to get the data from the search collection.
+  // globalfuzzysearch: async (req, res) => {
+  //   try {
+  //     let search = req.body.search;
+  //     const pageNumber = req.body.pageNumber;
+  //     const limit = req.body.limit || 10;
+  //     const offset = (pageNumber - 1) * limit;
+
+  //     const fuzzySearch = await searchModel.find({}).skip(offset).limit(limit);
+
+  //     const searchData = await searchModel
+  //       .aggregate([
+  //         { $match: { name: { $regex: search, $options: "i" } } },
+  //         { $project: { name: 1, s_id: 1, _id: 0 } },
+  //       ])
+  //       .skip(offset)
+  //       .limit(limit);
+
+  //     const options = {
+  //       keys: ["name"],
+  //       includeScore: true,
+  //       threshold: 0.4,
+  //     };
+
+  //     let fuse = new Fuse(fuzzySearch, options);
+  //     searchUsingFuzzy = fuse.search(search);
+
+  //     return res.status(200).json({
+  //       "Using Regex": searchData,
+  //       "Using fuzzysearch": searchUsingFuzzy,
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+  //   }
+  // },
   globalfuzzysearch: async (req, res) => {
     try {
       let search = req.body.search;
@@ -83,16 +118,8 @@ module.exports = {
 
       const fuzzySearch = await searchModel.find({}).skip(offset).limit(limit);
 
-      const searchData = await searchModel
-        .aggregate([
-          { $match: { name: { $regex: search, $options: "i" } } },
-          { $project: { name: 1, s_id: 1, _id: 0 } },
-        ])
-        .skip(offset)
-        .limit(limit);
-
       const options = {
-        keys: ["name"],
+        keys: ['name'],
         includeScore: true,
         threshold: 0.4,
       };
@@ -100,10 +127,7 @@ module.exports = {
       let fuse = new Fuse(fuzzySearch, options);
       searchUsingFuzzy = fuse.search(search);
 
-      return res.status(200).json({
-        "Using Regex": searchData,
-        "Using fuzzysearch": searchUsingFuzzy,
-      });
+      return res.status(200).json({ result : searchUsingFuzzy });
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -138,6 +162,9 @@ module.exports = {
       );
 
       console.log(searchResult);
+
+      searchResult = fuzzySearch(searchResult, searchId);
+
       if (searchResult.length === 0) {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
       }
@@ -168,11 +195,11 @@ const fuzzySearch = (list, searchId) => {
 function findBook(model, query, offset, limit) {
   return model === bookModel.model
     ? model
-        .find(query, { _id: 0, __v: 0 })
-        .skip(offset)
-        .limit(limit)
-        .populate("authorId", "-_id -__v")
-        .populate("languageId", "-_id -__v")
+      .find(query, { _id: 0, __v: 0 })
+      .skip(offset)
+      .limit(limit)
+      .populate("authorId", "-_id -__v")
+      .populate("languageId", "-_id -__v")
     : model.find(query).skip(offset).limit(limit);
 }
 
