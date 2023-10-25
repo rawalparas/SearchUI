@@ -7,6 +7,7 @@ const schema = require('../../middleware/joiSchema.js');
 const createController = require('./createController.js');
 
 router.post('/insertBook', validation.validate(schema.insertBook) , createController.insertBook);
+router.post('/insertBooks', validation.validate(schema.insertBooks) , createController.insertBooks);
 
 module.exports = router;
 
