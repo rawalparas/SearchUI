@@ -114,9 +114,9 @@ module.exports = {
       let search = req.body.search;
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
-      const offset = (pageNumber - 1) * limit;
+      // const offset = (pageNumber - 1) * limit;
 
-      const fuzzySearch = await searchModel.find({}).skip(offset).limit(limit);
+      const allData = await searchModel.find({});
 
       const options = {
         keys: ['name'],
@@ -124,10 +124,10 @@ module.exports = {
         threshold: 0.4,
       };
 
-      let fuse = new Fuse(fuzzySearch, options);
-      searchUsingFuzzy = fuse.search(search);
+      let fuse = new Fuse(allData, options);
+      fuzzySearch = fuse.search(search);
 
-      return res.status(200).json({ result : searchUsingFuzzy });
+      return res.status(200).json({ result : fuzzySearch });
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -182,9 +182,6 @@ function findBook(model, query, offset, limit) {
       .populate("languageId", "-_id -__v")
     : model.find(query).skip(offset).limit(limit);
 }
-
-// const foundBooks = searchResult.map((result) => result.item);
-
 
 
 // select: async (req, res) => {
