@@ -60,14 +60,12 @@ module.exports = {
       const searchData = await searchModel
         .aggregate([
           { $match: { name: { $regex: search, $options: "i" } } },
-          { $project: { name: 1, s_id: 1, _id: 0 } },
+          { $project: { name: 1, s_id: 1, type : 1, _id: 0 } },
         ])
         .skip(offset)
         .limit(limit);
 
-      return res.status(200).json({
-        result: searchData,
-      });
+      return res.status(200).send(searchData);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
