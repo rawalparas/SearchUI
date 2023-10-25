@@ -116,18 +116,20 @@ module.exports = {
       const limit = req.body.limit || 10;
       // const offset = (pageNumber - 1) * limit;
 
-      const allData = await searchModel.find({});
+      const allData = await searchModel.find({} , {_id : 0 , __v : 0});
 
       const options = {
         keys: ['name'],
-        includeScore: true,
+        includeScore: false,
         threshold: 0.4,
       };
 
       let fuse = new Fuse(allData, options);
       fuzzySearch = fuse.search(search);
+      fuzzySearch = fuzzySearch.map(result => result.item);
 
-      return res.status(200).json({ result : fuzzySearch });
+
+      return res.status(200).send(fuzzySearch);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);

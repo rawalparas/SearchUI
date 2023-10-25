@@ -10,12 +10,9 @@ app.use(express.json());
 const allRoutes = require('./src/api/controller');
 
 const cors = require('cors');
-const errorHandler = require('./src/api/errorHandling/errorHandling.js');
 app.use(cors());
 
 app.use('/api', allRoutes);
-
-app.use(errorHandler);
 
 app.use((req, res) => {                 
     res.status(404).send("Page not found");
