@@ -138,9 +138,6 @@ module.exports = {
       );
 
       console.log(searchResult);
-
-      searchResult = fuzzySearch(searchResult, searchId);
-
       if (searchResult.length === 0) {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
       }
