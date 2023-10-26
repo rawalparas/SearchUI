@@ -16,9 +16,7 @@ module.exports = {
 
       let fuseSearch = new Fuse(getBooksData, options);
       getBooksData = fuseSearch.search();
-
-      // const foundBooks = searchResult.map((result) => result.item);
-
+      
       return res.status(200).json({ books: getBooksData });
     } catch (error) {
       console.log(error);
@@ -60,7 +58,7 @@ module.exports = {
       const searchData = await searchModel
         .aggregate([
           { $match: { name: { $regex: search, $options: "i" } } },
-          { $project: { name: 1, s_id: 1, type : 1, _id: 0 } },
+          { $project: { name: 1, s_id: 1, type: 1, _id: 0 } },
         ])
         .skip(offset)
         .limit(limit);
@@ -71,50 +69,11 @@ module.exports = {
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
-  // method to get the data from the search collection.
-  // globalfuzzysearch: async (req, res) => {
-  //   try {
-  //     let search = req.body.search;
-  //     const pageNumber = req.body.pageNumber;
-  //     const limit = req.body.limit || 10;
-  //     const offset = (pageNumber - 1) * limit;
-
-  //     const fuzzySearch = await searchModel.find({}).skip(offset).limit(limit);
-
-  //     const searchData = await searchModel
-  //       .aggregate([
-  //         { $match: { name: { $regex: search, $options: "i" } } },
-  //         { $project: { name: 1, s_id: 1, _id: 0 } },
-  //       ])
-  //       .skip(offset)
-  //       .limit(limit);
-
-  //     const options = {
-  //       keys: ["name"],
-  //       includeScore: true,
-  //       threshold: 0.4,
-  //     };
-
-  //     let fuse = new Fuse(fuzzySearch, options);
-  //     searchUsingFuzzy = fuse.search(search);
-
-  //     return res.status(200).json({
-  //       "Using Regex": searchData,
-  //       "Using fuzzysearch": searchUsingFuzzy,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-  //   }
-  // },
   globalfuzzysearch: async (req, res) => {
     try {
       let search = req.body.search;
-      const pageNumber = req.body.pageNumber;
-      const limit = req.body.limit || 10;
-      // const offset = (pageNumber - 1) * limit;
 
-      const allData = await searchModel.find({} , {_id : 0 , __v : 0});
+      const allData = await searchModel.find({}, { _id: 0, __v: 0 });
 
       const options = {
         keys: ['name'],
