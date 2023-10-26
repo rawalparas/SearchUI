@@ -10,7 +10,7 @@ module.exports = {
     try {
       const books = req.body;
 
-      const insertedBooks = await Promise.all(books.map(async (book) => {
+      await Promise.all(books.map(async (book) => {
         const { name, author, language } = book;
 
         const [languageId, authorId] = await Promise.all([
@@ -29,7 +29,6 @@ module.exports = {
           createIfNotExist(searchModel, { name: authorId.name, type: authorModel.type, s_id: authorId._id }),
           createIfNotExist(searchModel, { name: languageId.name, type: languageModel.type, s_id: languageId._id })
         ]);
-        return bookData;
       }));
 
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);

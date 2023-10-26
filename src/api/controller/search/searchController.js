@@ -30,22 +30,13 @@ module.exports = {
   },
   globalfuzzysearch: async (req, res) => {
     try {
-      let search = req.body.search;
+      const search = req.body.search;
 
       const allData = await findBook(searchModel , {})
 
-      const options = {
-        keys: ['name'],
-        includeScore: false,
-        threshold: 0.4,
-      };
+      const fuzzySearchResult = fuzzySearch(allData , search)
 
-      let fuse = new Fuse(allData, options);
-      let fuzzySearch = fuse.search(search);
-      fuzzySearch = fuzzySearch.map(result => result.item);
-
-
-      return res.status(200).send(fuzzySearch);
+      return res.status(200).send(fuzzySearchResult);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -99,4 +90,18 @@ function findBook(model, query, offset, limit) {
       .populate("authorId", "-_id -__v")
       .populate("languageId", "-_id -__v")
     : model.find(query ,  { _id: 0, __v: 0 }).skip(offset).limit(limit);
+}
+
+const fuzzySearch = (allData , search) => {
+  const options = {
+    keys: ['name'],
+    includeScore: false,
+    threshold: 0.4,
+  };
+
+  let fuse = new Fuse(allData, options);
+  let fuzzySearch = fuse.search(search);
+  fuzzySearch = fuzzySearch.map(result => result.item);
+
+  return fuzzySearch;
 }
