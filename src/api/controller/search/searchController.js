@@ -30,11 +30,11 @@ module.exports = {
   },
   globalFuzzySearch : async (req, res) => {
     try {
-      const search = req.body.search;
+      const searchValues = req.body.search;
 
       const books = await findBook(searchModel , {})
 
-      const searchResult = await fuzzySearch(books , search);
+      const searchResult = await fuzzySearch(books , searchValues);
 
       return res.status(200).send(searchResult);
     } catch (error) {
@@ -92,7 +92,7 @@ async function findBook(model, query, offset, limit) {
     : model.find(query ,  { _id: 0, __v: 0 }).skip(offset).limit(limit);
 }
 
-function fuzzySearch(books , search ){
+function fuzzySearch(books , searchValues ){
   return new Promise((resolve , reject) => {
     const options = {
       keys: ['name'],
@@ -102,12 +102,12 @@ function fuzzySearch(books , search ){
     let fuse = new Fuse(books , options);
 
     try {
-      let fuzzyResults = fuse.search(search);
+      let fuzzyResults = fuse.search(searchValues);
       let fuzzyItems = fuzzyResults.map(result => result.item);
       resolve(fuzzyItems);
     } catch (error) {
       console.log("Error in fuzzySearch:", error);
-      reject(error);
+      throw error;
     }
   })
 };
