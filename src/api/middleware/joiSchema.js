@@ -1,13 +1,13 @@
 const Joi = require("joi");
 
 module.exports = {
-  fuzzySearch: Joi.object({
-    search: Joi.string().required(),
-  }),
   globalSearch: Joi.object({
     search: Joi.string().required(),
     pageNumber: Joi.number().min(1).required(),
     limit: Joi.number().optional(),
+  }),
+  globalFuzzySearch : Joi.object({
+    search : Joi.string().required()
   }),
   select: Joi.object({
     searchId: Joi.string().required(),

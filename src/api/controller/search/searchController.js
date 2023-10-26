@@ -6,47 +6,6 @@ const authorModel = require("../../../model/authorModel.js");
 const languageModel = require("../../../model/languageModel.js");
 
 module.exports = {
-  // method to get all the details of books.
-  allBook: async (req, res) => {
-    try {
-      let getBooksData = await bookModel.model
-        .find({}, { _id: 0, __v: 0 })
-        .populate("authorId", "-_id -__v")
-        .populate("languageId", "-_id -__v");
-
-      let fuseSearch = new Fuse(getBooksData, options);
-      getBooksData = fuseSearch.search();
-
-      return res.status(200).json({ books: getBooksData });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-    }
-  },
-  fuzzySearch: async (req, res) => {
-    try {
-      const search = req.query.search;
-
-      let getData = await bookModel.model
-        .find({}, { _id: 0, __v: 0 })
-        .populate("authorId", "-_id -__v")
-        .populate("languageId", "-_id -__v");
-
-      const options = {
-        keys: ['name'],
-        includeScore: true,
-        threshold: 0.4,
-      };
-
-      const fuse = new Fuse(getData, options);
-      const result = fuse.search(search);
-
-      return res.status(200).send(result);
-    } catch (error) {
-      console.log(error);
-      res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-    }
-  },
   // method to get the data from the search collection.
   globalSearch: async (req, res) => {
     try {
