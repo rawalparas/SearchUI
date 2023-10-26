@@ -32,7 +32,7 @@ module.exports = {
     try {
       let search = req.body.search;
 
-      const allData = await searchModel.find({}, { _id: 0, __v: 0 });
+      const allData = await findBook(searchModel , {})
 
       const options = {
         keys: ['name'],
@@ -41,7 +41,7 @@ module.exports = {
       };
 
       let fuse = new Fuse(allData, options);
-      fuzzySearch = fuse.search(search);
+      let fuzzySearch = fuse.search(search);
       fuzzySearch = fuzzySearch.map(result => result.item);
 
 
@@ -79,7 +79,7 @@ module.exports = {
         limit
       );
 
-      if (searchResult.length === 0) {
+      if (!searchResult || searchResult.length === 0) {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
       }
       return res.status(200).send(searchResult);
@@ -98,5 +98,5 @@ function findBook(model, query, offset, limit) {
       .limit(limit)
       .populate("authorId", "-_id -__v")
       .populate("languageId", "-_id -__v")
-    : model.find(query).skip(offset).limit(limit);
+    : model.find(query ,  { _id: 0, __v: 0 }).skip(offset).limit(limit);
 }
