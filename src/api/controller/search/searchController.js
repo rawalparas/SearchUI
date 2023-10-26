@@ -28,15 +28,15 @@ module.exports = {
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
-  globalfuzzysearch: async (req, res) => {
+  globalFuzzySearch : async (req, res) => {
     try {
       const search = req.body.search;
 
-      const allData = await findBook(searchModel , {})
+      const books = await findBook(searchModel , {})
 
-      const fuzzySearchResult = fuzzySearch(allData , search)
+      const searchResult = await fuzzySearch(books , search);
 
-      return res.status(200).send(fuzzySearchResult);
+      return res.status(200).send(searchResult);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -81,7 +81,7 @@ module.exports = {
   },
 };
 
-function findBook(model, query, offset, limit) {
+async function findBook(model, query, offset, limit) {
   return model === bookModel.model
     ? model
       .find(query, { _id: 0, __v: 0 })
@@ -92,16 +92,22 @@ function findBook(model, query, offset, limit) {
     : model.find(query ,  { _id: 0, __v: 0 }).skip(offset).limit(limit);
 }
 
-const fuzzySearch = (allData , search) => {
-  const options = {
-    keys: ['name'],
-    includeScore: false,
-    threshold: 0.4,
-  };
+function fuzzySearch(books , search ){
+  return new Promise((resolve , reject) => {
+    const options = {
+      keys: ['name'],
+      includeScore: false,
+      threshold: 0.4,
+    };
+    let fuse = new Fuse(books , options);
 
-  let fuse = new Fuse(allData, options);
-  let fuzzySearch = fuse.search(search);
-  fuzzySearch = fuzzySearch.map(result => result.item);
-
-  return fuzzySearch;
-}
+    try {
+      let fuzzyResults = fuse.search(search);
+      let fuzzyItems = fuzzyResults.map(result => result.item);
+      resolve(fuzzyItems);
+    } catch (error) {
+      console.log("Error in fuzzySearch:", error);
+      reject(error);
+    }
+  })
+};
