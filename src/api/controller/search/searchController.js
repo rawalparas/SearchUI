@@ -16,7 +16,7 @@ module.exports = {
 
       let fuseSearch = new Fuse(getBooksData, options);
       getBooksData = fuseSearch.search();
-      
+
       return res.status(200).json({ books: getBooksData });
     } catch (error) {
       console.log(error);
@@ -33,7 +33,7 @@ module.exports = {
         .populate("languageId", "-_id -__v");
 
       const options = {
-        keys: ["name"],
+        keys: ['name'],
         includeScore: true,
         threshold: 0.4,
       };
@@ -44,7 +44,7 @@ module.exports = {
       return res.status(200).send(result);
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "An error occurred." });
+      res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
   // method to get the data from the search collection.
@@ -141,63 +141,3 @@ function findBook(model, query, offset, limit) {
       .populate("languageId", "-_id -__v")
     : model.find(query).skip(offset).limit(limit);
 }
-
-
-// select: async (req, res) => {
-//   try {
-//     let searchId = req.body.searchId;
-//     const type = req.body.type;
-//     const pageNumber = req.body.pageNumber;
-//     const limit = req.body.limit || 10;
-//     const offset = (pageNumber - 1) * limit;
-
-//     switch (type) {
-//       case "book":
-//         model = bookModel.model;
-//         break;
-//       case "author":
-//         model = authorModel.model;
-//         break;
-//       case "language":
-//         model = languageModel.model;
-//         break;
-//       default:
-//         return res.status(400).send(messages.INVALID_TYPE);
-//     }
-//     let searchResult = await findBook(
-//       model,
-//       { _id: searchId },
-//       offset,
-//       limit
-//     );
-
-//     console.log(searchResult);
-
-//     searchResult = fuzzySearch(searchResult, searchId);
-
-//     if (searchResult.length === 0) {
-//       return res.status(404).send(messages.NO_RESULTS_FOUND);
-//     }
-//     return res.status(200).send(searchResult);
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-//   }
-// }
-
-// const fuzzySearch = (list, searchId) => {
-//   let options = {
-//     keys: ["_id"],
-//     includeScore: true,
-//     threshold: 0.4,
-//     // isCaseSensitive: false,
-//     // includeMatches: true,
-//   };
-
-// let fuse = new Fuse(list, options);
-// console.log(list);
-// console.log(options.keys);
-// console.log(fuse);
-// return fuse.search(searchId);
-// };
-
