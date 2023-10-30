@@ -9,7 +9,7 @@ module.exports = {
   // method to get the data from the search collection.
   globalSearch: async (req, res) => {
     try {
-      let search = req.body.search;
+      const search = req.body.search;
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
@@ -44,7 +44,7 @@ module.exports = {
   },
   select: async (req, res) => {
     try {
-      let searchId = req.body.searchId;
+      const searchId = req.body.searchId;
       const type = req.body.type;
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
@@ -100,7 +100,6 @@ function fuzzySearch(books , searchValues ){
       threshold: 0.4,
     };
     let fuse = new Fuse(books , options);
-
     try {
       let fuzzyResults = fuse.search(searchValues);
       let fuzzyItems = fuzzyResults.map(result => result.item);
