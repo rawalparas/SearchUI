@@ -21,8 +21,10 @@ const REGEX_PATTERN_UNMATCHED = "Field does not match the required pattern";
 const BOOK_NAME_MUST_BE_UNIQUE = "Book name must be unique";
 const INVALID_TYPE = "Invalid Type Field";
 const NO_RESULTS_FOUND = "No Results Found";
+const SOMETHING_WENT_WRONG = "Somethin went wrong";
 
 module.exports = {
+    SOMETHING_WENT_WRONG ,
     REGEX_PATTERN_UNMATCHED ,
     SUCCESSSFUL_GET ,
     SUCCESSSFULLY_CREATED ,

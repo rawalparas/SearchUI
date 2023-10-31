@@ -70,7 +70,7 @@ module.exports = {
         limit
       );
 
-      if (!searchResult) return res.status(400).send(messages.SOMETHING_WENT_WRONG);
+      if (!searchResult) return res.status(500).send(messages.SOMETHING_WENT_WRONG);
 
       if (searchResult.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
 
