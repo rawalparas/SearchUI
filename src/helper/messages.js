@@ -22,8 +22,10 @@ const BOOK_NAME_MUST_BE_UNIQUE = "Book name must be unique";
 const INVALID_TYPE = "Invalid Type Field";
 const NO_RESULTS_FOUND = "No Results Found";
 const SOMETHING_WENT_WRONG = "Something went wrong";
+const NOT_FOUND = "Not Found";
 
 module.exports = {
+    NOT_FOUND , 
     SOMETHING_WENT_WRONG ,
     REGEX_PATTERN_UNMATCHED ,
     SUCCESSSFUL_GET ,

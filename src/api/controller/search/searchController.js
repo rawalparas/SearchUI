@@ -32,15 +32,15 @@ module.exports = {
     try {
       const searchValue = req.body.search;
 
-      const books = await findBooks(searchModel , {})
+      let books = await findBooks(searchModel , {});
+      if(books){
+        books = await fuzzySearch(books , searchValue);
+      }
+      if (!books) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
-      const searchResult = await fuzzySearch(books , searchValue);
+      if (books.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
 
-      if (!searchResult) return res.status(500).send(messages.SOMETHING_WENT_WRONG);
-
-      if (searchResult.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
-
-      return res.status(200).send(searchResult);
+      return res.status(200).send(books);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -65,7 +65,7 @@ module.exports = {
           model = languageModel.model;
           break;
         default:
-          return res.status(400).send(messages.INVALID_TYPE);
+          return res.status(400).send(messages.NOT_FOUND);
       }
       let searchResult = await findBooks(
         model,
@@ -74,9 +74,9 @@ module.exports = {
         limit
       );
 
-      if (!searchResult) return res.status(500).send(messages.SOMETHING_WENT_WRONG);
+      if (!searchResult) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
-      if (searchResult.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
+      if (searchResult.length === 0) return res.status(204).send(messages.NO_RESULTS_FOUND);
 
       return res.status(200).send(searchResult);
     } catch (error) {
@@ -107,8 +107,8 @@ function fuzzySearch(books , searchValue){
     try {
       const fuse = new Fuse(books , options);
       let fuzzyResults = fuse.search(searchValue);
-      fuzzyResults = fuzzyResults.map(result => result.item);
-      resolve(fuzzyResults);
+      let fuzzyItems = fuzzyResults.map(result => result.item);
+      resolve(fuzzyItems);
     } catch (error) {
       console.log("Error in fuzzySearch:", error);
       throw error;
