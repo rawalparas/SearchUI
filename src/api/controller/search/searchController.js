@@ -14,11 +14,13 @@ module.exports = {
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
 
+      const pipeline = [
+        { $match: { name: { $regex: search, $options: "i" } } },
+        { $project: { name: 1, s_id: 1, type: 1, _id: 0 } },
+      ];
+
       const searchData = await searchModel
-        .aggregate([
-          { $match: { name: { $regex: search, $options: "i" } } },
-          { $project: { name: 1, s_id: 1, type: 1, _id: 0 } },
-        ])
+        .aggregate(pipeline)
         .skip(offset)
         .limit(limit);
 
@@ -55,13 +57,13 @@ module.exports = {
       const offset = (pageNumber - 1) * limit;
 
       switch (type) {
-        case "book":
+        case bookModel.type:
           model = bookModel.model;
           break;
-        case "author":
+        case authorModel.type:
           model = authorModel.model;
           break;
-        case "language":
+        case languageModel.type:
           model = languageModel.model;
           break;
         default:
