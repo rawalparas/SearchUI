@@ -16,10 +16,10 @@ const { Client } = require('pg');
 
 // Create a new client instance with your PostgreSQL connection details
 const client = new Client({
-  user: '',
+  user: 'postgres',
   host: '',  
-  database: 'your_database_name',
-  password: 'your_password',
+  database: 'books',
+  password: 'password',
   port: 5432,  // Change to your PostgreSQL server port
 });
 
