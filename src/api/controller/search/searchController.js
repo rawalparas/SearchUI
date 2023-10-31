@@ -30,11 +30,15 @@ module.exports = {
   },
   globalFuzzySearch : async (req, res) => {
     try {
-      const searchValues = req.body.search;
+      const searchValue = req.body.search;
 
-      const books = await findBook(searchModel , {})
+      const books = await findBooks(searchModel , {})
 
-      const searchResult = await fuzzySearch(books , searchValues);
+      const searchResult = await fuzzySearch(books , searchValue);
+
+      if (!searchResult) return res.status(500).send(messages.SOMETHING_WENT_WRONG);
+
+      if (searchResult.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
 
       return res.status(200).send(searchResult);
     } catch (error) {
@@ -63,7 +67,7 @@ module.exports = {
         default:
           return res.status(400).send(messages.INVALID_TYPE);
       }
-      let searchResult = await findBook(
+      let searchResult = await findBooks(
         model,
         { _id: searchId },
         offset,
@@ -82,7 +86,7 @@ module.exports = {
   },
 };
 
-async function findBook(model, query, offset, limit) {
+async function findBooks(model, query, offset, limit) {
   return model === bookModel.model
     ? model
       .find(query, { _id: 0, __v: 0 })
@@ -93,18 +97,18 @@ async function findBook(model, query, offset, limit) {
     : model.find(query ,  { _id: 0, __v: 0 }).skip(offset).limit(limit);
 }
 
-function fuzzySearch(books , searchValues ){
+function fuzzySearch(books , searchValue){
   return new Promise((resolve , reject) => {
     const options = {
       keys: ['name'],
       includeScore: false,
       threshold: 0.4,
     };
-    let fuse = new Fuse(books , options);
     try {
-      let fuzzyResults = fuse.search(searchValues);
-      let fuzzyItems = fuzzyResults.map(result => result.item);
-      resolve(fuzzyItems);
+      const fuse = new Fuse(books , options);
+      let fuzzyResults = fuse.search(searchValue);
+      fuzzyResults = fuzzyResults.map(result => result.item);
+      resolve(fuzzyResults);
     } catch (error) {
       console.log("Error in fuzzySearch:", error);
       throw error;
