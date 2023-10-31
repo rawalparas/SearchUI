@@ -70,9 +70,10 @@ module.exports = {
         limit
       );
 
-      if (!searchResult || searchResult.length === 0) {
-        return res.status(404).send(messages.NO_RESULTS_FOUND);
-      }
+      if (!searchResult) return res.status(400).send(messages.SOMETHING_WENT_WRONG);
+
+      if (searchResult.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
+
       return res.status(200).send(searchResult);
     } catch (error) {
       console.log(error);
