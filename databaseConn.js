@@ -1,32 +1,17 @@
-// const mongoose = require("mongoose");
-// const URL = process.env.URL;  
+require('dotenv').config()
+const pg = require('pg');  // Client is a interface of pg 
 
-// mongoose.connect(URL, { useNewUrlParser: true });
-// const db = mongoose.connection;
-
-// db.once("open", (_) => {                // This function create an event listener for an open event and this is executed only once
-//   console.log("Database connected:", URL);
-// });
-// db.on("error", (err) => {               //  This set up the event listener if any error occurs in the connection
-//   console.error("connection error:", err);
-// });
-
-
-const { Client } = require('pg');
-
-// Create a new client instance with your PostgreSQL connection details
-const client = new Client({
+const client = new pg.Client({
   user: 'postgres',
-  host: '',  
-  database: 'books',
-  password: 'password',
-  port: 5432,  // Change to your PostgreSQL server port
+  host: 'localhost',  
+  database: process.env.DATABASE,
+  password: process.env.PASSWORD,
+  port: 5432,
 });
 
-// Connect to the PostgreSQL database
 client.connect()
   .then(() => {
-    console.log('Connected to PostgreSQL');
+    console.log('Connected to Database :',process.env.DATABASE);
   })
   .catch((err) => {
     console.error('Error connecting to PostgreSQL:', err);
