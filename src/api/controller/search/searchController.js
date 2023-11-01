@@ -24,6 +24,10 @@ module.exports = {
         .skip(offset)
         .limit(limit);
 
+      if(!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);  
+
+      if(searchData.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
+
       return res.status(200).send(searchData);
     } catch (error) {
       console.log(error);
@@ -34,15 +38,22 @@ module.exports = {
     try {
       const searchValue = req.body.search;
 
-      let books = await findBooks(searchModel , {});
-      if(books){
-        books = await fuzzySearch(books , searchValue);
+      const allBooks = await findBooks(searchModel , {});
+
+      if(!allBooks){
+        if(allBooks.length === 0) return res.status(204).send(messages.NO_RESULTS_FOUND);
+        return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
       }
-      if (!books) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
-      if (books.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
+      const fuzzyBooks = await fuzzySearch(allBooks , searchValue);
 
-      return res.status(200).send(books);
+      if(!fuzzyBooks){
+        if(fuzzyBooks.length === 0){
+          return res.status(204).send(messages.NO_RESULTS_FOUND);
+        }
+        return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+      }
+      return res.status(200).send(fuzzyBooks);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
