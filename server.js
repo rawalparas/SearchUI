@@ -4,7 +4,7 @@ const app = express();
 
 const PORT = process.env.PORT;
 
-require('./databaseConn.js');
+require('./connUsingPostgres.js');
 
 app.use(express.json());
 const allRoutes = require('./src/api/controller');
