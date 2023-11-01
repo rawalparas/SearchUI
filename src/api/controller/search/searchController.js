@@ -24,9 +24,9 @@ module.exports = {
         .skip(offset)
         .limit(limit);
 
-      if(!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);  
+      if (!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
-      if(searchData.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
+      if (searchData.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
 
       return res.status(200).send(searchData);
     } catch (error) {
@@ -34,24 +34,25 @@ module.exports = {
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
-  globalFuzzySearch : async (req, res) => {
+  globalFuzzySearch: async (req, res) => {
     try {
       const searchValue = req.body.search;
 
-      const allBooks = await findBooks(searchModel , {});
+      const allBooks = await findBooks(searchModel, {});
 
-      if(!allBooks){
-        if(allBooks.length === 0) return res.status(204).send(messages.NO_RESULTS_FOUND);
+      if (!allBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
       }
+      if (allBooks.length === 0) {
+        return res.status(404).send(messages.NO_RESULTS_FOUND);
+      }
+      const fuzzyBooks = await fuzzySearch(allBooks, searchValue);
 
-      const fuzzyBooks = await fuzzySearch(allBooks , searchValue);
-
-      if(!fuzzyBooks){
-        if(fuzzyBooks.length === 0){
-          return res.status(204).send(messages.NO_RESULTS_FOUND);
-        }
+      if (!fuzzyBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+      }
+      if (fuzzyBooks.length === 0) {
+        return res.status(404).send(messages.NO_RESULTS_FOUND);
       }
       return res.status(200).send(fuzzyBooks);
     } catch (error) {
@@ -107,18 +108,18 @@ async function findBooks(model, query, offset, limit) {
       .limit(limit)
       .populate("authorId", "-_id -__v")
       .populate("languageId", "-_id -__v")
-    : model.find(query ,  { _id: 0, __v: 0 }).skip(offset).limit(limit);
+    : model.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
 }
 
-function fuzzySearch(books , searchValue){
-  return new Promise((resolve , reject) => {
+function fuzzySearch(books, searchValue) {
+  return new Promise((resolve, reject) => {
     const options = {
       keys: ['name'],
       includeScore: false,
       threshold: 0.4,
     };
     try {
-      const fuse = new Fuse(books , options);
+      const fuse = new Fuse(books, options);
       let fuzzyResults = fuse.search(searchValue);
       let fuzzyItems = fuzzyResults.map(result => result.item);
       resolve(fuzzyItems);
@@ -128,3 +129,20 @@ function fuzzySearch(books , searchValue){
     }
   })
 };
+
+// errorResult = errorHandling(fuzzyBooks , res);
+
+// if (errorResult) {
+//   return errorResult;
+// }
+// console.log(errorResult)
+
+// function errorHandling(result, res) {
+//   if (!result) {
+//     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+//   }
+//   if (result.length === 0) {
+//     return res.status(204).send(messages.NO_RESULTS_FOUND);
+//   }
+//   return null;
+// }
