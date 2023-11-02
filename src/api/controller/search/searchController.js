@@ -81,7 +81,7 @@ module.exports = {
         default:
           return res.status(400).send(messages.NOT_FOUND);
       }
-      let searchResult = await findBooks(
+      const searchResult = await findBooks(
         model,
         { _id: searchId },
         offset,
