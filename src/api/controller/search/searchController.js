@@ -30,8 +30,6 @@ module.exports = {
 
       if (!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
-      if (searchData.length === 0) return res.status(200).send(messages.NO_RESULTS_FOUND);
-
       return res.status(200).send(searchData);
     } catch (error) {
       console.log(error);
@@ -49,17 +47,12 @@ module.exports = {
       if (!allBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
       }
-      if (allBooks.length === 0) {
-        return res.status(200).send(messages.NO_RESULTS_FOUND);
-      }
+    
       const fuzzyBooks = await fuzzySearch(allBooks, searchValue);
       console.log(fuzzyBooks);
 
       if (!fuzzyBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-      }
-      if (fuzzyBooks.length === 0) {
-        return res.status(200).send(messages.NO_RESULTS_FOUND);
       }
       return res.status(200).send(fuzzyBooks);
     } catch (error) {
@@ -103,8 +96,6 @@ module.exports = {
       console.log(searchResult);
 
       if (!searchResult) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-
-      if (searchResult.length === 0) return res.status(200).send(messages.NO_RESULTS_FOUND);
 
       return res.status(200).send(searchResult);
     } catch (error) {
