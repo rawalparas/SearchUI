@@ -14,6 +14,8 @@ module.exports = {
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
 
+      console.log(search);
+
       const pipeline = [
         { $match: { name: { $regex: search, $options: "i" } } },
         { $project: { name: 1, s_id: 1, type: 1, _id: 0 } },
@@ -23,6 +25,8 @@ module.exports = {
         .aggregate(pipeline)
         .skip(offset)
         .limit(limit);
+
+      console.log(searchData);
 
       if (!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
@@ -37,8 +41,10 @@ module.exports = {
   globalFuzzySearch: async (req, res) => {
     try {
       const searchValue = req.body.search;
+      console.log(searchValue);
 
       const allBooks = await findBooks(searchModel, {});
+      console.log(allBooks);
 
       if (!allBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -47,6 +53,7 @@ module.exports = {
         return res.status(404).send(messages.NO_RESULTS_FOUND);
       }
       const fuzzyBooks = await fuzzySearch(allBooks, searchValue);
+      console.log(fuzzyBooks);
 
       if (!fuzzyBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
@@ -68,6 +75,8 @@ module.exports = {
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
 
+      console.log(searchId);
+
       let model;
 
       switch (type) {
@@ -83,12 +92,15 @@ module.exports = {
         default:
           return res.status(400).send(messages.NOT_FOUND);
       }
+      console.log(model);
+
       const searchResult = await findBooks(
         model,
         { _id: searchId },
         offset,
         limit
       );
+      console.log(searchResult);
 
       if (!searchResult) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
@@ -122,8 +134,8 @@ function fuzzySearch(books, searchValue) {
     };
     try {
       const fuse = new Fuse(books, options);
-      let fuzzyResults = fuse.search(searchValue);
-      let fuzzyItems = fuzzyResults.map(result => result.item);
+      const fuzzyResults = fuse.search(searchValue);
+      const fuzzyItems = fuzzyResults.map(result => result.item);
       resolve(fuzzyItems);
     } catch (error) {
       console.log("Error in fuzzySearch:", error);

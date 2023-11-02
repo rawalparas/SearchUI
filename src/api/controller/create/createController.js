@@ -23,6 +23,7 @@ module.exports = {
           authorId: authorId._id,
           languageId: languageId._id,
         });
+        console.log(bookData);
 
         await Promise.all([
           createIfNotExist(searchModel, { name: bookData.name, type: bookModel.type, s_id: bookData._id }),
