@@ -6,7 +6,7 @@ const authorModel = require("../../../model/authorModel.js");
 const languageModel = require("../../../model/languageModel.js");
 
 module.exports = {
-  // method to get the data from the search collection.
+  // Method to performing the global search from the search collection..
   globalSearch: async (req, res) => {
     try {
       const search = req.body.search;
