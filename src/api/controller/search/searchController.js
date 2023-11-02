@@ -143,20 +143,3 @@ function fuzzySearch(books, searchValue) {
     }
   })
 };
-
-// errorResult = errorHandling(fuzzyBooks , res);
-
-// if (errorResult) {
-//   return errorResult;
-// }
-// console.log(errorResult)
-
-// function errorHandling(result, res) {
-//   if (!result) {
-//     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-//   }
-//   if (result.length === 0) {
-//     return res.status(204).send(messages.NO_RESULTS_FOUND);
-//   }
-//   return null;
-// }
