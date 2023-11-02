@@ -6,13 +6,15 @@ const authorModel = require("../../../model/authorModel.js");
 const languageModel = require("../../../model/languageModel.js");
 
 module.exports = {
-  // method to get the data from the search collection.
+  // Method to performing the global search from the search collection..
   globalSearch: async (req, res) => {
     try {
       const search = req.body.search;
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
+
+      console.log(search);
 
       const pipeline = [
         { $match: { name: { $regex: search, $options: "i" } } },
@@ -24,9 +26,9 @@ module.exports = {
         .skip(offset)
         .limit(limit);
 
-      if (!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+      console.log(searchData);
 
-      if (searchData.length === 0) return res.status(404).send(messages.NO_RESULTS_FOUND);
+      if (!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
 
       return res.status(200).send(searchData);
     } catch (error) {
@@ -37,22 +39,20 @@ module.exports = {
   globalFuzzySearch: async (req, res) => {
     try {
       const searchValue = req.body.search;
+      console.log(searchValue);
 
       const allBooks = await findBooks(searchModel, {});
+      console.log(allBooks);
 
       if (!allBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
       }
-      if (allBooks.length === 0) {
-        return res.status(404).send(messages.NO_RESULTS_FOUND);
-      }
+    
       const fuzzyBooks = await fuzzySearch(allBooks, searchValue);
+      console.log(fuzzyBooks);
 
       if (!fuzzyBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-      }
-      if (fuzzyBooks.length === 0) {
-        return res.status(404).send(messages.NO_RESULTS_FOUND);
       }
       return res.status(200).send(fuzzyBooks);
     } catch (error) {
@@ -68,6 +68,10 @@ module.exports = {
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
 
+      console.log(searchId);
+
+      let model;
+
       switch (type) {
         case bookModel.type:
           model = bookModel.model;
@@ -81,16 +85,17 @@ module.exports = {
         default:
           return res.status(400).send(messages.NOT_FOUND);
       }
+      console.log(model);
+
       const searchResult = await findBooks(
         model,
         { _id: searchId },
         offset,
         limit
       );
+      console.log(searchResult);
 
       if (!searchResult) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-
-      if (searchResult.length === 0) return res.status(204).send(messages.NO_RESULTS_FOUND);
 
       return res.status(200).send(searchResult);
     } catch (error) {
@@ -120,8 +125,8 @@ function fuzzySearch(books, searchValue) {
     };
     try {
       const fuse = new Fuse(books, options);
-      let fuzzyResults = fuse.search(searchValue);
-      let fuzzyItems = fuzzyResults.map(result => result.item);
+      const fuzzyResults = fuse.search(searchValue);
+      const fuzzyItems = fuzzyResults.map(result => result.item);
       resolve(fuzzyItems);
     } catch (error) {
       console.log("Error in fuzzySearch:", error);
@@ -129,20 +134,3 @@ function fuzzySearch(books, searchValue) {
     }
   })
 };
-
-// errorResult = errorHandling(fuzzyBooks , res);
-
-// if (errorResult) {
-//   return errorResult;
-// }
-// console.log(errorResult)
-
-// function errorHandling(result, res) {
-//   if (!result) {
-//     return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-//   }
-//   if (result.length === 0) {
-//     return res.status(204).send(messages.NO_RESULTS_FOUND);
-//   }
-//   return null;
-// }
