@@ -1,13 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const validation = require('../../middleware/validator.js');
-const schema = require('../../middleware/joiSchema.js');
+const validation = require("../../middleware/validator.js");
+const schema = require("../../middleware/joiSchema.js");
 
-const searchController = require('./searchController.js'); 
+const searchController = require("./searchController.js");
 
-router.get('/allbook' , searchController.allBook);
-router.post('/search' , validation.validate(schema.globalSearch) , searchController.globalSearch);
-router.post('/book' , validation.validate(schema.search) , searchController.search);
+router.post("/globalsearch", validation.validate(schema.globalSearch), searchController.globalSearch); // global search using regex
+router.post("/globalfuzzysearch", validation.validate(schema.globalFuzzySearch), searchController.globalFuzzySearch); // global search using fuzzy
+router.post("/select", validation.validate(schema.select), searchController.select);
 
 module.exports = router;

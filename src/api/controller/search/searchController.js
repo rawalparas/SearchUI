@@ -1,82 +1,136 @@
+const Fuse = require("fuse.js");
 const messages = require("../../../helper/messages.js");
 const searchModel = require("../../../model/searchModel.js");
 const bookModel = require("../../../model/bookModel.js");
-const authorModel = require('../../../model/authorModel.js');
-const languageModel = require('../../../model/languageModel.js');
+const authorModel = require("../../../model/authorModel.js");
+const languageModel = require("../../../model/languageModel.js");
 
 module.exports = {
-  // method to get all the details of books.
-  allBook : async (req, res) => {
-    try {
-      const getBooksData = await bookModel.model
-        .find({}, { _id: 0, __v: 0 })
-        .populate("authorId", "-_id -__v")
-        .populate("languageId", "-_id -__v");
-      return res.status(200).json({ books: getBooksData });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
-    }
-  },
-  // method to get the data from the search collection.
+  // Method to performing the global search from the search collection..
   globalSearch: async (req, res) => {
     try {
-      let search = req.body.search;
+      const search = req.body.search;
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
+
+      console.log(search);
+
+      const pipeline = [
+        { $match: { name: { $regex: search, $options: "i" } } },
+        { $project: { name: 1, s_id: 1, type: 1, _id: 0 } },
+      ];
+
       const searchData = await searchModel
-        .aggregate([
-          { $match: { name: { $regex: search, $options: "i" } } },
-          { $project: { name: 1, s_id: 1, _id: 0 } },
-        ])
+        .aggregate(pipeline)
         .skip(offset)
         .limit(limit);
+
+      console.log(searchData);
+
+      if (!searchData) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+
       return res.status(200).send(searchData);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
   },
-  search: async (req, res) => {
+  globalFuzzySearch: async (req, res) => {
     try {
-      let searchId = req.body.searchId;
+      const searchValue = req.body.search;
+      console.log(searchValue);
+
+      const allBooks = await findBooks(searchModel, {});
+      console.log(allBooks);
+
+      if (!allBooks) {
+        return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+      }
+    
+      const fuzzyBooks = await fuzzySearch(allBooks, searchValue);
+      console.log(fuzzyBooks);
+
+      if (!fuzzyBooks) {
+        return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+      }
+      return res.status(200).send(fuzzyBooks);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+    }
+  },
+  select: async (req, res) => {
+    try {
+      const searchId = req.body.searchId;
       const type = req.body.type;
       const pageNumber = req.body.pageNumber;
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
 
-      switch (type){
-        case "book" :
+      console.log(searchId);
+
+      let model;
+
+      switch (type) {
+        case bookModel.type:
           model = bookModel.model;
           break;
-        case "author" :
+        case authorModel.type:
           model = authorModel.model;
           break;
-        case "language" : 
+        case languageModel.type:
           model = languageModel.model;
           break;
-        default :
-          return res.status(400).send(messages.INVALID_TYPE);
+        default:
+          return res.status(400).send(messages.NOT_FOUND);
       }
-      let searchResult = await findBook( model, { _id : searchId }  , offset , limit);
+      console.log(model);
 
-      if (!searchResult) {
-        return res.status(404).send(messages.NO_RESULTS_FOUND);
-      } 
-      return res.status(200).send(searchResult); 
+      const searchResult = await findBooks(
+        model,
+        { _id: searchId },
+        offset,
+        limit
+      );
+      console.log(searchResult);
 
+      if (!searchResult) return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+
+      return res.status(200).send(searchResult);
     } catch (error) {
       console.log(error);
       return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
     }
-  }
+  },
 };
 
-
-function findBook(model , query , offset , limit) {
-  return model === bookModel.model ? model.find(query , {_id : 0 , __v : 0}).skip(offset).limit(limit)
-  .populate("authorId", "-_id -__v")
-  .populate("languageId", "-_id -__v") 
-  : model.find(query).skip(offset).limit(limit);
+async function findBooks(model, query, offset, limit) {
+  return model === bookModel.model
+    ? model
+      .find(query, { _id: 0, __v: 0 })
+      .skip(offset)
+      .limit(limit)
+      .populate("authorId", "-_id -__v")
+      .populate("languageId", "-_id -__v")
+    : model.find(query, { _id: 0, __v: 0 }).skip(offset).limit(limit);
 }
+
+function fuzzySearch(books, searchValue) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      keys: ['name'],
+      includeScore: false,
+      threshold: 0.4,
+    };
+    try {
+      const fuse = new Fuse(books, options);
+      const fuzzyResults = fuse.search(searchValue);
+      const fuzzyItems = fuzzyResults.map(result => result.item);
+      resolve(fuzzyItems);
+    } catch (error) {
+      console.log("Error in fuzzySearch:", error);
+      throw error;
+    }
+  })
+};
