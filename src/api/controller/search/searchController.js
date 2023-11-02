@@ -68,6 +68,8 @@ module.exports = {
       const limit = req.body.limit || 10;
       const offset = (pageNumber - 1) * limit;
 
+      let model;
+
       switch (type) {
         case bookModel.type:
           model = bookModel.model;
