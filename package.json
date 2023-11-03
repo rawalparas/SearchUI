@@ -17,6 +17,9 @@
     "joi": "^17.10.2",
     "mongodb": "^6.1.0",
     "mongoose": "^7.5.2",
-    "mongoose-unique-validator": "^4.0.0"
+    "mongoose-unique-validator": "^4.0.0",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.34.0"
   }
 }

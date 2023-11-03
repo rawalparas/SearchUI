@@ -4,7 +4,8 @@ const app = express();
 
 const PORT = process.env.PORT;
 
-require('./databaseConn.js');
+const db = require('./sequelizeConnection.js');
+db.testDbConnection();
 
 app.use(express.json());
 const allRoutes = require('./src/api/controller');
