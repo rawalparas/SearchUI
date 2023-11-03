@@ -17,7 +17,5 @@
     "mongoose": "^7.5.2",
     "mongoose-unique-validator": "^4.0.0",
     "pg": "^8.11.3"
-  },
-  "keywords": [],
-  "description": ""
+  }
 }
