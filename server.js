@@ -7,6 +7,8 @@ const PORT = process.env.PORT;
 const db = require('./sequelizeConnection.js');
 db.testDbConnection();
 
+const index = require('./models');
+
 app.use(express.json());
 const allRoutes = require('./src/api/controller');
 

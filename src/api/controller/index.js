@@ -4,7 +4,7 @@ const router = express.Router();
 const create = require('./create');
 const search = require('./search');
 
-router.use('/books', create);
+router.use('/books', create.createRoutes);
 router.use('/books', search);
 
 module.exports = router;
