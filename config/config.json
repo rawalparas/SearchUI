@@ -1,10 +1,11 @@
 {
-  "development" : {
+  "development": {
     "username": "athansys",
     "password": "password",
     "database": "books",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "port": 5432
   },
   "test": {
     "username": "process.env.USERNAME",

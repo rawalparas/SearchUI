@@ -9,17 +9,22 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      _id: {
-        type: Sequelize.INTEGER
-      },
       name: {
         type: Sequelize.STRING
       },
-      author_id: {
-        type: Sequelize.INTEGER
+      authorId: {
+        type: Sequelize.INTEGER,
+        references : {
+          model : 'authors',
+          key : 'id'
+        }
       },
-      language_id: {
-        type: Sequelize.INTEGER
+      languageId: {
+        type: Sequelize.INTEGER,
+        references : {
+          model : 'languages',
+          key : 'id'
+        }
       },
       createdAt: {
         allowNull: false,

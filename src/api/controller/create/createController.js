@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const sequelize = require('sequelize');
-const {languageModel, authorModel, bookModel, searchModel} = require('../create')
+const { languageModel, authorModel, bookModel, searchModel } = require('../create')
 const messages = require("../../../helper/messages.js");
-const { book } = require('../../../../models');   // this file is importing the model for postgres.
+const pgBook = require('../../../../models');
 
-
-module.exports = { 
+module.exports = {
   insertBooks: async (req, res) => {
     try {
       const books = req.body;
@@ -42,10 +41,18 @@ module.exports = {
   },
   insertBooksv2: async (req, res) => {
     try {
-      const bookData = req.body.book;
+      const {name , author, language} = req.body;
 
-      const insertedBook = await book.create({name : bookData.name , author_id : bookData.author, language_id : bookData.language});
-      if (!insertedBook) {
+      const insertedLanguage = await pgBook.language.create({name : language });
+      const insertedAuthor = await pgBook.author.create({name : author});
+
+      const insertBook = await pgBook.book.create({
+        name : name,
+        authorId : insertedAuthor.id,
+        languageId : insertedLanguage.id
+      });
+
+      if (!insertBook) {
         return res.status(400).send(messages.BAD_REQUEST);
       }
       return res.status(200).send(messages.SUCCESSSFULLY_CREATED);
@@ -70,7 +77,7 @@ function createIfNotExist(model, query) {
         }
       })
       .catch((error) => {
-        console.log("Error in findAndCreate" , error);
+        console.log("Error in findAndCreate", error);
         throw error;
       });
   });

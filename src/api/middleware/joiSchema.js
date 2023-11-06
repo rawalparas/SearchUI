@@ -22,11 +22,9 @@ module.exports = {
       language: Joi.string().required(),
     })
   ),
-  insertBooksv2 : Joi.object({
-    book: Joi.object({
-      name: Joi.string().required(),
-      author: Joi.number().required(),
-      language: Joi.number().required(),
-    }).required(),
+  insertBooksv2: Joi.object({
+    name: Joi.string().required(),
+    author: Joi.string().required(),
+    language: Joi.string().required(),
   })
 };
