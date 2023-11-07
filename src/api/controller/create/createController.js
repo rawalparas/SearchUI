@@ -43,8 +43,10 @@ module.exports = {
     try {
       const {name , author, language} = req.body;
 
-      const insertedLanguage = await pgBook.language.create({name : language });
-      const insertedAuthor = await pgBook.author.create({name : author});
+      const [insertedLanguage , insertedAuthor] = await Promise.all([
+        createIfNotExist(pgBook.language, {name : language}),
+        createIfNotExist(pgBook.author, {name : author})
+      ]);
 
       const insertBook = await pgBook.book.create({
         name : name,

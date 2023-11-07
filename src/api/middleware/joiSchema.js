@@ -1,6 +1,11 @@
 const Joi = require("joi");
 
 module.exports = {
+  search : Joi.object({
+    search : Joi.string(),
+    pageNumber : Joi.number().required(),
+    limit : Joi.string().optional()
+  }),
   globalSearch: Joi.object({
     search: Joi.string().required(),
     pageNumber: Joi.number().min(1).required(),
