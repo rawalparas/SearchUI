@@ -8,31 +8,9 @@ const pgBook = require('../../../../models');
 
 module.exports = {
   // Method to find all the data from the tables.
-  search: async (req, res) => {
+  search : async (req, res) => {
     try {
-      const models = req.query.model;
-      // const pageNumber = req.query.pageNumber;
-      // const limit = req.query.limit || 2;
-      // const offset = (pageNumber - 1) * limit;
-
-      let searchResult = [];
-
-      if (!models || models.length === 0) {
-        let models = [pgBook.book, pgBook.author, pgBook.language];
-  
-        await Promise.all(
-          models.map(async (model) => {
-            const result = await model.findAll();
-            searchResult.push(result);
-          })
-        );
-        return res.status(200).send(searchResult);
-      }
-      await Promise.all(
-        models.map(async (model) => {
-          const result = await model.findAll();
-          searchResult.push(result); 
-      }));
+      const searchResult = await pgBook.book.findAll();
 
       if (!searchResult) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
