@@ -7,4 +7,7 @@ const search = require('./search');
 router.use('/books', create);
 router.use('/books', search);
 
+console.log(create);
+console.log(search);
+
 module.exports = router;

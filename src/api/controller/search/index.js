@@ -1,3 +1,5 @@
-const getRoutes = require('./searchRoutes.js');
+const searchRoutes = require('./searchRoutes.js');
 
-module.exports = getRoutes;
+console.log(searchRoutes);
+
+module.exports = searchRoutes;

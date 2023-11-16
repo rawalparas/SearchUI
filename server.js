@@ -4,7 +4,9 @@ const app = express();
 
 const PORT = process.env.PORT;
 
-require('./databaseConn.js');
+const postgresConnection = require('./models');
+
+console.log(postgresConnection);
 
 app.use(express.json());
 const allRoutes = require('./src/api/controller');
@@ -18,6 +20,13 @@ app.use((req, res) => {
     res.status(404).send("Page not found");
 });
 
-app.listen(PORT, (err) => {             
+postgresConnection.sequelize.authenticate()
+.then(() => {
+  console.log('Database connection has been established successfully.');
+  app.listen(PORT, (err) => {
     console.log("Server running on " + PORT);
+  });
+})
+.catch((err) => {
+  console.error('Unable to connect to the database:', err);
 });

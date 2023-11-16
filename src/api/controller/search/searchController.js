@@ -4,8 +4,23 @@ const searchModel = require("../../../model/searchModel.js");
 const bookModel = require("../../../model/bookModel.js");
 const authorModel = require("../../../model/authorModel.js");
 const languageModel = require("../../../model/languageModel.js");
+const pgBook = require('../../../../models');
 
 module.exports = {
+  // Method to find all the data from the tables.
+  search : async (req, res) => {
+    try {
+      const searchResult = await pgBook.book.findAll();
+
+      if (!searchResult) {
+        return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+      }
+      return res.status(200).send(searchResult)
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
+    }
+  },
   // Method to performing the global search from the search collection..
   globalSearch: async (req, res) => {
     try {
@@ -47,7 +62,7 @@ module.exports = {
       if (!allBooks) {
         return res.status(500).send(messages.INTERNAL_SERVER_ERROR);
       }
-    
+
       const fuzzyBooks = await fuzzySearch(allBooks, searchValue);
       console.log(fuzzyBooks);
 
@@ -134,3 +149,14 @@ function fuzzySearch(books, searchValue) {
     }
   })
 };
+
+
+// let searchResult = [];
+//       const models = [pgBook.book , pgBook.author , pgBook.language];
+
+//       if(search && search.length != 0){
+//         await Promise.all(models.map(async (model) => {
+//           result = await model.findAll()
+//         }))
+//       }
+//       searchResult = await pgBook.book.findAll(); 
